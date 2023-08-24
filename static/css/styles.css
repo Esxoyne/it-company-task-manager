@@ -1,0 +1,11 @@
+.sidebar {
+  min-height: 100vh;
+}
+
+.bi {
+  vertical-align: -.125em;
+}
+
+.sign-out {
+  --bs-dropdown-link-active-bg: var(--bs-danger);
+}
