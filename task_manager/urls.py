@@ -4,6 +4,9 @@ from . import views
 
 
 urlpatterns = [
+    path("", views.Index.as_view(), name="home"),
+    path("tasks/", views.TaskListView.as_view(), name="task-list"),
+    path("employees/", views.WorkerListView.as_view(), name="worker-list"),
     path("toggle-theme/", views.toggle_theme, name="toggle-theme"),
 ]
 
