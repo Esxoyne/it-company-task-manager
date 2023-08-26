@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="{{ is_dark_mode|yesno:"dark," }}">
+<html lang="en" data-bs-theme="{{ is_dark_mode|yesno:"dark,light" }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +15,15 @@
   <link rel="icon" type="image/svg" href="{% static "img/brand.svg" %}">
   <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
-<body class="d-flex flex-column min-vh-100 {{ is_dark_mode|yesno:"bg-image-dark,bg-image-light" }}">
+<body class="d-flex flex-column min-vh-100 bg-dark-subtle {{ is_dark_mode|yesno:"bg-image-dark,bg-image-light" }}">
   <header class="sticky-top">
     {% include "includes/header.html" %}
   </header>
 
   <div class="container-fluid container-xxl d-flex flex-grow-1">
-    <div class="row flex-grow-1 {{ is_dark_mode|yesno:"bg-image-dark,bg-image-light" }}">
+    <div class="row flex-grow-1">
       {% include "includes/sidebar.html" %}
-      <div class="shadow-lg col-md-9 offset-md-3 offset-xxl-0 col-xxl-12 px-5 d-flex flex-column bg-body">
+      <div class="main-col shadow-lg col-md-9 offset-md-3 offset-xxl-0 col-xxl-12 px-5 d-flex flex-column bg-body">
         {% block navigation %}
           {% include "includes/navigation.html" %}
         {% endblock %}

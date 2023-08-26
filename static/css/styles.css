@@ -1,6 +1,11 @@
 .sidebar {
   min-height: 100vh;
   max-width: 230px;
+  --bs-bg-opacity: .65;
+}
+
+.main-col {
+  --bs-bg-opacity: .95;
 }
 
 .sign-out {
@@ -11,10 +16,14 @@
   /* Photo by Suzy Hazelwood: https://www.pexels.com/photo/blue-and-red-galaxy-artwork-1629236/ */
   background-image: url("../img/background-dark.jpg");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .bg-image-light {
   /* Photo by Anni Roenkae: https://www.pexels.com/photo/photo-of-abstract-painting-2693212/ */
   background-image: url("../img/background-light.jpg");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
