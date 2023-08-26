@@ -9,6 +9,7 @@
       type="button"
       aria-label="Toggle theme"
       data-bs-toggle="tooltip"
+      data-bs-placement="bottom"
       data-bs-title="{{ is_dark_mode|yesno:"Light,Dark" }} mode"
     >
       {% if is_dark_mode %}
@@ -39,6 +40,9 @@
     <a 
       class="link-body-emphasis text-decoration-none"
       href="https://github.com/Esxoyne/it-company-task-manager"
+      data-bs-toggle="tooltip"
+      data-bs-placement="bottom"
+      data-bs-title="Project GitHub"
     >
       <i class="bi bi-github h2"></i>
     </a>

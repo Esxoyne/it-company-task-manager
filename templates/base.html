@@ -15,15 +15,15 @@
   <link rel="icon" type="image/svg" href="{% static "icons/brand.svg" %}">
   <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
   <header class="sticky-top">
     {% include "includes/header.html" %}
   </header>
 
-  <div class="container-fluid">
-    <div class="row">
+  <div class="container-fluid container-xl d-flex flex-grow-1">
+    <div class="row flex-grow-1">
       {% include "includes/sidebar.html" %}
-      <div class="col-md-9 offset-md-3 col-xl-10 offset-xl-2">
+      <div class="col-md-9 offset-md-3 offset-xl-0 col-xl-12 px-5 d-flex flex-column">
         {% block navigation %}
           {% include "includes/navigation.html" %}
         {% endblock %}
