@@ -16,18 +16,23 @@
   <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
 <body>
-  {% include "includes/toggle_theme.html" %}
-
-  <header>
+  <header class="sticky-top">
     {% include "includes/header.html" %}
   </header>
 
   <div class="container-fluid">
     <div class="row">
       {% include "includes/sidebar.html" %}
-      <main class="col-md-9 col-lg-8 col-xl-9">
-        {% block content %}{% endblock %}
-      </main>
+      <div class="col-md-9 offset-md-3 col-xl-10 offset-xl-2">
+        {% block navigation %}
+          {% include "includes/navigation.html" %}
+        {% endblock %}
+        <main class="my-3">
+          {% block content %}{% endblock %}
+        </main>
+
+        {% include "includes/footer.html" %}
+      </div>
     </div>
   </div>
 
