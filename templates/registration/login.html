@@ -1,13 +1,29 @@
 {% extends "base.html" %}
-
-{% block navigation %}{% endblock %}
+{% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>Login</h1>
-
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-  </form>
+<div class="col-xl-4 col-md-7 mx-auto">
+  <div class="card">
+    <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
+      <span class="fs-2 fw-light text-center">Sign in</span>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{% url "login" %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex flex-column justify-content-center">
+          <button class="btn btn-lg {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
+            <i class="bi bi-box-arrow-in-right"></i> Submit
+          </button>
+          <span class="mt-2 text-center">
+            Don't have an account?
+            <a href="{% url "task_manager:sign-up" %}" class="link-body-emphasis link-underline-secondary">
+              Sign up
+            </a>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
