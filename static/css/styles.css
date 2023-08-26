@@ -1,7 +1,20 @@
 .sidebar {
   min-height: 100vh;
+  max-width: 230px;
 }
 
 .sign-out {
   --bs-dropdown-link-active-bg: var(--bs-danger);
+}
+
+.bg-image-dark {
+  /* Photo by Suzy Hazelwood: https://www.pexels.com/photo/blue-and-red-galaxy-artwork-1629236/ */
+  background-image: url("../img/background-dark.jpg");
+  background-size: cover;
+}
+
+.bg-image-light {
+  /* Photo by Anni Roenkae: https://www.pexels.com/photo/photo-of-abstract-painting-2693212/ */
+  background-image: url("../img/background-light.jpg");
+  background-size: cover;
 }
