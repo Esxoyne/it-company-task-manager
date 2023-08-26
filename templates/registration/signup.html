@@ -7,7 +7,7 @@
     <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
       <span class="fs-2 fw-light text-center">Create an account</span>
     </div>
-    <div class="container col-10 col-md-12 col-xxl-8">
+    <div class="container col-12 col-xxl-8">
       <div class="card-body">
         <form method="post" action="{% url "task_manager:sign-up" %}">
           {% csrf_token %}

@@ -1,3 +1,7 @@
+.asteriskField {
+  display: none;
+}
+
 .sidebar {
   min-height: 100vh;
   max-width: 230px;
@@ -5,7 +9,7 @@
 }
 
 .main-col {
-  --bs-bg-opacity: .95;
+  --bs-bg-opacity: .9;
 }
 
 .sign-out {
