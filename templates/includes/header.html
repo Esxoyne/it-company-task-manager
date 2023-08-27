@@ -24,7 +24,11 @@
             class="nav-link {% if request.resolver_match.url_name == "home" %}active{% endif %}"
             href="{% url "task_manager:home" %}"
           >
+            {% if request.resolver_match.url_name == "home" %}
+            <i class="bi bi-house-door-fill pe-none me-2"></i>
+            {% else %}
             <i class="bi bi-house-door pe-none me-2"></i>
+            {% endif %}
             Home
           </a>
         </li>
@@ -42,7 +46,11 @@
             class="nav-link {% if request.resolver_match.url_name == "worker-list" %}active{% endif %}"
             href="{% url "task_manager:worker-list" %}"
           >
+            {% if request.resolver_match.url_name == "worker-list" %}
+            <i class="bi bi-people-fill pe-none me-2"></i>
+            {% else %}
             <i class="bi bi-people pe-none me-2"></i>
+            {% endif %}
             Employees
           </a>
         </li>
@@ -72,7 +80,16 @@
             <li><a class="dropdown-item" href="#">New task...</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="sign-out dropdown-item" href="{% url "logout" %}">Sign out</a></li>
+            <li>
+              <button
+                type="button"
+                class="dropdown-item sign-out"
+                data-bs-toggle="modal"
+                data-bs-target="#logout"
+              >
+                Sign out
+              </button>
+            </li>
           </ul>
         </li>
         {% else %}
