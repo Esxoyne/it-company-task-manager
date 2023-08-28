@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import generic
@@ -6,7 +8,7 @@ from .forms import SignUpForm
 from .models import Worker, Task
 
 
-class Index(generic.ListView):
+class Index(LoginRequiredMixin, generic.ListView):
     model = Worker
     template_name = "task_manager/index.html"
 
@@ -20,11 +22,11 @@ def toggle_theme(request, **kwargs):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
-class TaskListView(generic.ListView):
+class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
 
 
-class WorkerListView(generic.ListView):
+class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = Worker
 
 

@@ -2,12 +2,12 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-<div class="col-xl-6 col-md-8 mx-auto">
+<div class="col-md-8 col-xl-6 mx-auto">
   <div class="card">
     <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
       <span class="fs-2 fw-light text-center">Create an account</span>
     </div>
-    <div class="container col-12 col-xxl-8">
+    <div class="container col-12 col-lg-10 col-xxl-9">
       <div class="card-body">
         <form method="post" action="{% url "task_manager:sign-up" %}">
           {% csrf_token %}

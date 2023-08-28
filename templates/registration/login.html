@@ -7,7 +7,7 @@
     <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
       <span class="fs-2 fw-light text-center">Sign in</span>
     </div>
-    <div class="container col-12 col-xxl-8">
+    <div class="container col-12 col-md-9 col-xxl-8">
       <div class="card-body">
         <form method="post" action="{% url "login" %}">
           {% csrf_token %}
@@ -16,6 +16,7 @@
             <button class="btn btn-lg {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
               <i class="bi bi-box-arrow-in-right"></i> Submit
             </button>
+            <input type="hidden" name="next" value="{{ next }}" />
             <span class="mt-2 text-center">
               Don't have an account?
               <a href="{% url "task_manager:sign-up" %}" class="link-body-emphasis link-underline-secondary">
