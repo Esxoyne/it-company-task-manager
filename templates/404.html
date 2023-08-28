@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="col-xl-5 col-md-7 mx-auto">
+    <div class="card">
+      <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
+        <span class="fs-2 fw-light text-center">404</span>
+      </div>
+      <div class="container col-12 col-md-9 col-xxl-8">
+        <div class="card-body text-center">
+          <p class="fw-semibold fs-3">Not Found</p>
+          <span class="fw-light fs-5">The requested page can't be found</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
