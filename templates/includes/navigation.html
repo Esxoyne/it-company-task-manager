@@ -9,7 +9,7 @@
         {% else %}
           <span class="d-flex me-auto font-monospace">Welcome back, {{ user.username }}!</span>
         {% endif %}
-      {% elif request.resolver_match.url_name in "worker-list, task-list" %}
+      {% elif request.resolver_match.url_name in "worker-list, task-list, task-type-list" %}
         {% include "includes/search_form.html" %}
       {% endif %}
     {% else %}

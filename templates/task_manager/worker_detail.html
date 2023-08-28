@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    Username: {{ worker.username }}
+  </h1>
+
+  {% if user.is_staff %}
+    <a href="{% url "task_manager:worker-update" pk=worker.id %}" class="btn btn-secondary">
+      Update position
+    </a>
+    <a href="{% url "task_manager:worker-delete" pk=worker.id %}" class="btn btn-danger">
+      Delete
+    </a>
+  {% endif %}
+
+  <p><strong>First name:</strong> {{ worker.first_name }}</p>
+  <p><strong>Last name:</strong> {{ worker.last_name }}</p>
+  <p><strong>Position:</strong> {{ worker.position }}</p>
+
+  <h4>Tasks</h4>
+
+  {% for task in worker.tasks.all %}
+      <hr>
+      <p><strong>Name:</strong> {{ task.name }}</p>
+      <p><strong>Priority: </strong>{{ task.priority|capfirst }}</p>
+      <p>{{ task.description }}</p>
+      <p class="text-muted"><strong>Type:</strong> {{task.task_type.name}}</p>
+  {% empty %}
+    <p>No tasks</p>
+  {% endfor %}
+{% endblock %}

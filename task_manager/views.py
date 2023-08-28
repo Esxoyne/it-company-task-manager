@@ -133,7 +133,7 @@ class WorkerDeleteView(
     generic.DeleteView
 ):
     model = Worker
-    success_url = reverse_lazy("worker-list")
+    success_url = reverse_lazy("task_manager:worker-list")
 
     def test_func(self):
         return self.request.user.is_staff

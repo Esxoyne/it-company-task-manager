@@ -61,6 +61,19 @@
         Employees
       </a>
     </li>
+    <li>
+      <a
+        href="{% url "task_manager:task-type-list" %}"
+        class="nav-link {% if request.resolver_match.url_name == "task-type-list" %}active{% else %}link-body-emphasis{% endif %}"
+      >
+        {% if request.resolver_match.url_name == "task-type-list" %}
+          <i class="bi bi-tags-fill pe-none me-2"></i>
+        {% else %}
+          <i class="bi bi-tags pe-none me-2"></i>
+        {% endif %}
+        Task Types
+      </a>
+    </li>
   </ul>
   <hr>
   {% if user.is_authenticated %}
