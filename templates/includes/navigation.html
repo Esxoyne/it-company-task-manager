@@ -1,8 +1,30 @@
+{% load static %}
+
 <nav class="navbar navbar-expand rounded mt-2">
   <div class="container-fluid justify-content-end">
-    <form class="d-flex me-auto" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-    </form>
+    {% if user.is_authenticated %}
+      {% if request.resolver_match.url_name == "home" %}
+        {% if user.first_name %}
+        <span class="d-flex me-auto font-monospace">Welcome back, {{ user.first_name }}!</span>
+        {% else %}
+        <span class="d-flex me-auto font-monospace">Welcome back, {{ user.username }}!</span>
+        {% endif %}
+      {% elif request.resolver_match.url_name in "worker-list, task-list" %}
+        {% include "includes/search_form.html" %}
+      {% endif %}
+    {% else %}
+      <a
+        href="{% url "login" %}"
+        class="d-flex align-items-center me-auto link-body-emphasis text-decoration-none"
+      >
+        {% if is_dark_mode %}
+        <img src="{% static "img/logo-light.svg" %}" alt="Logo" width="30" height="24" class="pe-none me-2">
+        {% else %}
+        <img src="{% static "img/logo-dark.svg" %}" alt="Logo" width="30" height="24" class="pe-none me-2">
+        {% endif %}
+        <span class="fs-4">TaskManager</span>
+      </a>
+    {% endif %}
     <a
       href="{% url "task_manager:toggle-theme" %}"
       class="btn btn-bd-primary py-2 d-flex align-items-center me-3"
