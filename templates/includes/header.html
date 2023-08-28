@@ -3,7 +3,11 @@
 <nav class="navbar d-md-none d-xxl-flex navbar-expand-xxl border-bottom shadow bg-body-tertiary">
   <div class="container">
     <a class="navbar-brand link-body-emphasis text-decoration-none" href="{% url "task_manager:home" %}">
-      <img src="{% static "img/brand.svg" %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      {% if is_dark_mode %}
+      <img src="{% static "img/logo-light.svg" %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      {% else %}
+      <img src="{% static "img/logo-dark.svg" %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      {% endif %}
       TaskManager
     </a>
     <button

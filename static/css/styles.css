@@ -31,3 +31,19 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+.dropdown-item:active {
+  --bs-dropdown-link-active-color: var(--bs-body-bg);
+  --bs-dropdown-link-active-bg: var(--bs-body-color);
+}
+
+.sign-out:active {
+  --bs-dropdown-link-active-color: var(--bs-light);
+  --bs-dropdown-link-active-bg: var(--bs-danger);
+}
+
+.nav-pills .nav-link.active {
+  --bs-nav-pills-link-active-color: var(--bs-body-bg);
+  --bs-nav-pills-link-active-bg: var(--bs-body-color);
+  transition: color .15s ease-in-out,border-color .15s ease-in-out;
+}
