@@ -4,9 +4,15 @@
   <h1>{{ task.name }}</h1>
 
   {% if user.is_staff %}
-    <a href="{% url "task_manager:task-delete" pk=task.id %}" class="btn btn-danger">
+    <button
+      type="button"
+      href="{% url "task_manager:task-delete" pk=task.id %}"
+      class="btn btn-danger"
+      data-bs-toggle="modal"
+      data-bs-target="#taskDelete"
+    >
       Delete
-    </a>
+    </button>
   {% endif %}
   <a href="{% url "task_manager:task-update" pk=task.id %}" class="btn btn-secondary">
     Update
@@ -44,4 +50,8 @@
       <li>{{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})</li>
     {% endfor %}
   </ul>
+
+  {% if user.is_staff %}
+    {% include "includes/task_delete_modal.html" with task=task %}
+  {% endif %}
 {% endblock %}

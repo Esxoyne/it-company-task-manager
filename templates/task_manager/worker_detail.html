@@ -9,9 +9,14 @@
     <a href="{% url "task_manager:worker-update" pk=worker.id %}" class="btn btn-secondary">
       Update position
     </a>
-    <a href="{% url "task_manager:worker-delete" pk=worker.id %}" class="btn btn-danger">
+    <button
+      type="button"
+      class="btn btn-danger"
+      data-bs-toggle="modal"
+      data-bs-target="#workerDelete"
+    >
       Delete
-    </a>
+    </button>
   {% endif %}
 
   <p><strong>First name:</strong> {{ worker.first_name }}</p>
@@ -29,4 +34,8 @@
   {% empty %}
     <p>No tasks</p>
   {% endfor %}
+
+  {% if user.is_staff %}
+    {% include "includes/worker_delete_modal.html" with worker=worker %}
+  {% endif %}
 {% endblock %}
