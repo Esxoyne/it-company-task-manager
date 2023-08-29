@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 class Position(models.Model):
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=32, unique=True)
 
     class Meta:
         ordering = ["name"]
@@ -35,7 +35,7 @@ class Worker(AbstractUser):
 
 
 class TaskType(models.Model):
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=32, unique=True)
 
     class Meta:
         ordering = ["name"]
@@ -51,7 +51,7 @@ class Task(models.Model):
         HIGH = "high", "High"
         URGENT = "urgent", "Urgent"
 
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=64)
     description = models.TextField()
     deadline = models.DateField()
     is_completed = models.BooleanField(default=False)
