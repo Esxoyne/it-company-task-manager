@@ -11,6 +11,20 @@
         {% endif %}
       {% elif request.resolver_match.url_name in "worker-list, task-list, task-type-list" %}
         {% include "includes/search_form.html" %}
+      {% elif request.resolver_match.url_name == "worker-detail" %}
+        {% if user.is_staff %}
+          <a class="font-monospace text-decoration-none text-reset me-3" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+          <span
+            type="button"
+            class="font-monospace text-danger me-auto"
+            data-bs-toggle="modal"
+            data-bs-target="#workerDelete"
+          >
+            Delete
+          </span>
+        {% elif worker == user %}
+          <a class="font-monospace text-decoration-none text-reset me-auto" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+        {% endif %}
       {% endif %}
     {% else %}
       <a

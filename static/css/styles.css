@@ -47,3 +47,23 @@
   --bs-nav-pills-link-active-bg: var(--bs-body-color);
   transition: color .15s ease-in-out,border-color .15s ease-in-out;
 }
+
+.low-priority {
+  background-color: lightgreen;
+  color: black;
+}
+
+.medium-priority {
+  background-color: royalblue;
+  color: white;
+}
+
+.high-priority {
+  background-color: orange;
+  color: black;
+}
+
+.urgent-priority {
+  background-color: red;
+  color: white;
+}

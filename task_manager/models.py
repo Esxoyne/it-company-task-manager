@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -78,3 +79,6 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse("task_manager:task-detail", kwargs={"pk": self.pk})
+
+    def is_at_risk(self):
+        return self.deadline <= datetime.now().date() + timedelta(days=3)
