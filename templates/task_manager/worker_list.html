@@ -1,42 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>
-    Employee List
+  <h1 class="text-center">
+    Team Members
   </h1>
 
   {% if worker_list %}
-    <table class="table">
-      <tr>
-        <th>Username</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Position</th>
-        {% if user.is_staff %}
-          <th>Delete</th>
-        {% endif %}
-      </tr>
-
-      {% for worker in worker_list %}
-        <tr>
-          <td><a href="{{ worker.get_absolute_url }}">{{ worker.username }} {% if user == worker %} (Me) {% endif %}</a></td>
-          <td>{{ worker.first_name }}</td>
-          <td>{{ worker.last_name }}</td>
-          <td>{{ worker.position }}</td>
-          {% if user.is_staff %}
-          <td>
-            <a
-              class="text-danger text-decoration-none"
-              href="{% url "task_manager:worker-delete" pk=worker.id %}"
-            >
-              Delete
-            </a>
-          </td>
-          {% endif %}
-        </tr>
-      {% endfor %}
-    </table>
+    <div class="col-11 container justify-content-center">
+      <table class="table table-striped table-hover mt-3">
+        <thead class="{{ is_dark_mode|yesno:"table-light,table-dark" }}">
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Full name</th>
+            <th>Position</th>
+            <th>Assigned tasks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for worker in worker_list %}
+          <tr>
+            <td>{{ worker.id }}</td>
+            <td>
+              <a class="text-reset link-underline-secondary" href="{% url "task_manager:worker-detail" pk=worker.id %}">{{ worker.username }}</a>
+            </td>
+            <td>{{ worker.first_name }} {{ worker.last_name }}</td>
+            <td>{{ worker.position }}</td>
+            <td>{{ worker.tasks.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% else %}
-    <p>There are no members in the team</p>
+    <span class="fw-light fs-4">There are no members on the team yet</span>
   {% endif %}
 {% endblock %}

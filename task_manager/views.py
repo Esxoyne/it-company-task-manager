@@ -62,7 +62,7 @@ def toggle_task_complete(request, pk):
     task.is_completed = not task.is_completed
     task.save()
 
-    return redirect(task.get_absolute_url())
+    return redirect(reverse_lazy("task_manager:task-list"))
 
 
 @login_required
@@ -121,7 +121,6 @@ class WorkerUpdateView(
 ):
     model = Worker
     form_class = WorkerUpdateForm
-    success_url = reverse_lazy("task_manager:worker-list")
 
     def test_func(self):
         return self.request.user.is_staff or (
