@@ -50,19 +50,19 @@ urlpatterns = [
         views.TaskTypeDeleteView.as_view(),
         name="task-type-delete"
     ),
-    path("employees/", views.WorkerListView.as_view(), name="worker-list"),
+    path("team/", views.WorkerListView.as_view(), name="worker-list"),
     path(
-        "employees/<int:pk>/",
+        "team/<int:pk>/",
         views.WorkerDetailView.as_view(),
         name="worker-detail",
     ),
     path(
-        "employees/<int:pk>/update/",
+        "team/<int:pk>/update/",
         views.WorkerPositionUpdateView.as_view(),
         name="worker-update",
     ),
     path(
-        "employees/<int:pk>/delete/",
+        "team/<int:pk>/delete/",
         views.WorkerDeleteView.as_view(),
         name="worker-delete",
     ),
