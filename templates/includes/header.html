@@ -106,8 +106,8 @@
               <strong>{{ user.username }}</strong>
             </a>
             <ul class="dropdown-menu mt-3">
-              <li><a class="dropdown-item" href="#">New task...</a></li>
-              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="{% url "task_manager:task-create" %}">New task...</a></li>
+              <li><a class="dropdown-item" href="{% url "task_manager:worker-detail" pk=user.id %}">Profile</a></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <button

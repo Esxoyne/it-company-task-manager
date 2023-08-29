@@ -40,8 +40,12 @@ class TaskForm(forms.ModelForm):
         )
 
 
-class WorkerPositionUpdateForm(forms.ModelForm):
+class WorkerUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Worker
-        fields = ("position",)
+        fields = (
+            "first_name",
+            "last_name",
+            "position",
+        )

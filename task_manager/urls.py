@@ -58,7 +58,7 @@ urlpatterns = [
     ),
     path(
         "team/<int:pk>/update/",
-        views.WorkerPositionUpdateView.as_view(),
+        views.WorkerUpdateView.as_view(),
         name="worker-update",
     ),
     path(
