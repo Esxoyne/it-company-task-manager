@@ -4,11 +4,6 @@
   <h1 class="text-center">
     Tasks
   </h1>
-  <div class="d-flex justify-content-center">
-    <a href="{% url "task_manager:task-create" %}" class="btn {{ is_dark_mode|yesno:"btn-outline-light,btn-outline-dark"}}">
-      <i class="bi bi-plus-square-fill"></i> Create
-    </a>
-  </div>
 
   {% if task_list %}
     <div class="col-11 container justify-content-center">
@@ -29,7 +24,7 @@
           <tr>
             <td>{{ task.id }}</td>
             <td>
-              <a class="text-reset link-underline-secondary" href="{% url "task_manager:task-detail" pk=task.id %}">{{ task.name }}</a>
+              <a class="link-body-emphasis text-decoration-none" href="{% url "task_manager:task-detail" pk=task.id %}">{{ task.name }}</a>
             </td>
             <td>{{ task.task_type.name }}</td>
             <td>
@@ -37,14 +32,22 @@
                 {{ task.priority|upper }}
               </span>
             </td>
-            <td>{{ task.deadline }}</td>
             <td>
               {% if task.is_completed %}
-                <span class="badge rounded-pill text-bg-success">Completed</span>
+                <span class="text-success-emphasis">{{ task.deadline }}</span>
               {% elif task.is_at_risk %}
-                <span class="badge rounded-pill text-bg-warning">At Risk</span>
+                <span class="text-warning-emphasis">{{ task.deadline }}</span>
               {% else %}
-                <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">On Track</span>
+                <span>{{ task.deadline }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if task.is_completed %}
+                <span class="badge rounded-pill text-bg-success"><i class="bi bi-check2"></i></span>
+              {% elif task.is_at_risk %}
+                <span class="badge rounded-pill text-bg-warning"><i class="bi bi-exclamation"></i></span>
+              {% else %}
+                <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}"><i class="bi bi-arrow-clockwise"></i></span>
               {% endif %}
             </td>
             <td>

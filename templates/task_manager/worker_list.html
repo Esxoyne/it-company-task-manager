@@ -22,7 +22,7 @@
           <tr>
             <td>{{ worker.id }}</td>
             <td>
-              <a class="text-reset link-underline-secondary" href="{% url "task_manager:worker-detail" pk=worker.id %}">{{ worker.username }}</a>
+              <a class="link-body-emphasis text-decoration-none" href="{% url "task_manager:worker-detail" pk=worker.id %}">{{ worker.username }}</a>
             </td>
             <td>{{ worker.first_name }} {{ worker.last_name }}</td>
             <td>{{ worker.position }}</td>

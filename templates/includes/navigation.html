@@ -1,7 +1,7 @@
 {% load static %}
 
 <nav class="navbar navbar-expand rounded mt-2">
-  <div class="container-fluid justify-content-end">
+  <div class="container-fluid justify-content-start">
     {% if user.is_authenticated %}
       {% if request.resolver_match.url_name == "home" %}
         {% if user.first_name %}
@@ -11,19 +11,35 @@
         {% endif %}
       {% elif request.resolver_match.url_name in "worker-list, task-list, task-type-list" %}
         {% include "includes/search_form.html" %}
+        {% if request.resolver_match.url_name == "task-list" %}
+          <a href="{% url "task_manager:task-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+            <i class="bi bi-plus-square"></i> Create
+          </a>
+        {% elif request.resolver_match.url_name == "task-type-list" %}
+          <a href="{% url "task_manager:task-type-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+            <i class="bi bi-plus-square"></i> Create
+          </a>
+        {% endif %}
+      {% elif request.resolver_match.url_name in "task-create, task-update, task-type-create, task-type-update, worker-update" %}
+        <a
+          href="../"
+          class="font-monospace text-decoration-none link-body-emphasis"
+        >
+        <i class="bi bi-arrow-left"></i> Go back
+        </a>
       {% elif request.resolver_match.url_name == "worker-detail" %}
         {% if user.is_staff %}
-          <a class="font-monospace text-decoration-none text-reset me-3" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+          <a class="font-monospace text-decoration-none link-body-emphasis me-3" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
           <span
             type="button"
-            class="font-monospace text-danger me-auto"
+            class="font-monospace link-danger"
             data-bs-toggle="modal"
             data-bs-target="#workerDelete"
           >
             Delete
           </span>
         {% elif worker == user %}
-          <a class="font-monospace text-decoration-none text-reset me-auto" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+          <a class="font-monospace text-decoration-none link-body-emphasis" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
         {% endif %}
       {% endif %}
     {% else %}
@@ -51,9 +67,11 @@
           <span class="fs-4">TaskManager</span>
       </a>
     {% endif %}
+
+    <!-- Dark theme toggler & GitHub link -->
     <a
       href="{% url "task_manager:toggle-theme" %}"
-      class="btn btn-bd-primary py-2 d-flex align-items-center me-3"
+      class="ms-auto btn btn-bd-primary py-2 d-flex align-items-center me-3"
       type="button"
       aria-label="Toggle theme"
       data-bs-toggle="tooltip"

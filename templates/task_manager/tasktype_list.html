@@ -4,11 +4,6 @@
   <h1 class="text-center">
     Task Type List
   </h1>
-  <div class="d-flex justify-content-center">
-    <a href="{% url "task_manager:task-type-create" %}" class="btn {{ is_dark_mode|yesno:"btn-outline-light,btn-outline-dark"}}">
-      <i class="bi bi-plus-square-fill"></i> Create
-    </a>
-  </div>
 
   {% if tasktype_list %}
     <div class="col-11 container justify-content-center">
@@ -25,7 +20,11 @@
           {% for tasktype in tasktype_list %}
           <tr>
             <td>{{ tasktype.id }}</td>
-            <td>{{ tasktype.name }}</td>
+            <td>
+              <span class="text-body-emphasis">
+                {{ tasktype.name }}
+              </span>
+            </td>
             <td>{{ tasktype.tasks.count }}</td>
             <td>
               <a
