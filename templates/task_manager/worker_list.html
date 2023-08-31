@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}
+  Team Members
+{% endblock %}
+
+{% block navigation %}
+  {% include "includes/nav_list.html" with create=False model=worker %}
+{% endblock %}
+
 {% block content %}
   <h1 class="text-center">
     Team Members

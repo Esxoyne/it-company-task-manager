@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
 
+{% block title %}
+  Sign Up
+{% endblock %}
+
+{% block navigation %}
+  {% include "includes/nav_auth.html" %}
+{% endblock %}
+
 {% block content %}
   <div class="col-md-8 col-xl-6 mx-auto">
     <div class="card">

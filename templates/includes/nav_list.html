@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand rounded mt-2">
+  <div class="container-fluid justify-content-start">
+    {% include "includes/search_form.html" %}
+    {% if create %}
+      {% if model == "task" %}
+        <a href="{% url "task_manager:task-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-plus-square"></i> Create
+        </a>
+      {% elif model == "task-type" %}
+        <a href="{% url "task_manager:task-type-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-plus-square"></i> Create
+        </a>
+      {% endif %}
+    {% endif %}
+    {% include "includes/nav_links.html" %}
+  </div>
+</nav>

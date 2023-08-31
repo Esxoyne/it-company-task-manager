@@ -29,7 +29,7 @@
       {% endif %}
       <div class="main-col shadow-lg px-5 d-flex flex-column bg-body {{ user.is_authenticated|yesno:"col-md-9 offset-md-3 offset-xxl-0 col-xxl-12," }}">
         {% block navigation %}
-          {% include "includes/navigation.html" %}
+          {% include "includes/nav_default.html" %}
         {% endblock %}
         <main class="my-3">
           {% block content %}{% endblock %}

@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand rounded mt-2">
+  <div class="container-fluid justify-content-start">
+    <a
+      href="../"
+      class="font-monospace text-decoration-none link-body-emphasis me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Go back
+    </a>
+    {% if user.is_staff %}
+      <a class="ms-auto font-monospace text-decoration-none link-body-emphasis me-3" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+      <span
+        type="button"
+        class="font-monospace link-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#workerDelete"
+      >
+        Delete
+      </span>
+    {% elif worker == user %}
+      <a class="ms-auto font-monospace text-decoration-none link-body-emphasis" href="{% url "task_manager:worker-update" pk=worker.id %}">Edit profile</a>
+    {% endif %}
+    {% include "includes/nav_links.html" %}
+  </div>
+</nav>
