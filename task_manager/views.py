@@ -26,6 +26,7 @@ def toggle_theme(request, **kwargs):
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
+    paginate_by = 8
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
@@ -80,6 +81,7 @@ def toggle_task_assign(request, pk):
 
 class TaskTypeListView(LoginRequiredMixin, generic.ListView):
     model = TaskType
+    paginate_by = 8
 
 
 class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
@@ -108,6 +110,7 @@ class TaskTypeDeleteView(
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = Worker
+    paginate_by = 8
 
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):

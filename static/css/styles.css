@@ -12,10 +12,6 @@
   --bs-bg-opacity: .9;
 }
 
-.sign-out {
-  --bs-dropdown-link-active-bg: var(--bs-danger);
-}
-
 .bg-image-dark {
   /* Photo by Anni Roenkae: https://www.pexels.com/photo/3d-futuristic-abstract-art-4k-wallpaper-15578416/ */
   background-image: url("../img/background-dark.jpg");
@@ -33,18 +29,18 @@
 }
 
 .dropdown-item:active {
-  --bs-dropdown-link-active-color: var(--bs-body-bg);
-  --bs-dropdown-link-active-bg: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
 }
 
 .sign-out:active {
-  --bs-dropdown-link-active-color: var(--bs-light);
-  --bs-dropdown-link-active-bg: var(--bs-danger);
+  color: var(--bs-light);
+  background-color: var(--bs-danger);
 }
 
 .nav-pills .nav-link.active {
-  --bs-nav-pills-link-active-color: var(--bs-body-bg);
-  --bs-nav-pills-link-active-bg: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
   transition: color .15s ease-in-out,border-color .15s ease-in-out;
 }
 
@@ -66,4 +62,19 @@
 .urgent-priority {
   background-color: red;
   color: white;
+}
+
+.page-item .page-link {
+  color: var(--bs-body-color);
+}
+
+.page-item .page-link:focus {
+  border-color: var(--bs-body-color);
+  box-shadow: none;
+}
+
+.page-item.active .page-link {
+  border-color: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
 }
