@@ -17,7 +17,7 @@
       </div>
       <div class="container col-12 col-md-9 col-xxl-8">
         <div class="card-body">
-          <form method="post" action="{% url "login" %}">
+          <form method="post" action="{% url "login" %}" class="login">
             {% csrf_token %}
             {{ form|crispy }}
             <div class="d-flex flex-column justify-content-center">

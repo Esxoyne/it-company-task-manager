@@ -1,5 +1,10 @@
-.asteriskField {
+.login .asteriskField {
   display: none;
+}
+
+.asteriskField {
+  margin-left: 2px;
+  color: var(--bs-body-danger);
 }
 
 .sidebar {
