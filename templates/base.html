@@ -16,11 +16,9 @@
   <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
 <body class="d-flex flex-column min-vh-100 bg-dark-subtle {{ is_dark_mode|yesno:"bg-image-dark,bg-image-light" }}">
-  <header class="sticky-top">
     {% if user.is_authenticated %}
       {% include "includes/header.html" %}
     {% endif %}
-  </header>
 
   <div class="container-fluid container-xxl d-flex flex-grow-1">
     <div class="row flex-grow-1">

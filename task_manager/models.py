@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+import datetime
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -72,7 +72,7 @@ class Task(models.Model):
     )
 
     class Meta:
-        ordering = ["id"]
+        ordering = ["deadline"]
 
     def __str__(self):
         return self.name
@@ -81,4 +81,11 @@ class Task(models.Model):
         return reverse("task_manager:task-detail", kwargs={"pk": self.pk})
 
     def is_at_risk(self):
-        return self.deadline <= datetime.now().date() + timedelta(days=3)
+        return (
+            datetime.date.today()
+            < self.deadline
+            <= datetime.date.today() + datetime.timedelta(days=3)
+        )
+
+    def is_overdue(self):
+        return self.deadline <= datetime.date.today()

@@ -3,8 +3,8 @@
 }
 
 .asteriskField {
-  margin-left: 2px;
-  color: var(--bs-body-danger);
+  margin-left: 3px;
+  color: var(--bs-danger);
 }
 
 .sidebar {
