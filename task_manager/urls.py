@@ -16,18 +16,23 @@ urlpatterns = [
         name="task-update",
     ),
     path(
+        "tasks/<int:pk>/renew/",
+        views.TaskRenewView.as_view(),
+        name="task-renew",
+    ),
+    path(
         "tasks/<int:pk>/delete/",
         views.TaskDeleteView.as_view(),
         name="task-delete",
     ),
     path(
         "tasks/<int:pk>/toggle-complete/",
-        views.toggle_task_complete,
+        views.ToggleTaskCompleteView.as_view(),
         name="toggle-task-complete",
     ),
     path(
         "tasks/<int:pk>/toggle-assign/",
-        views.toggle_task_assign,
+        views.ToggleTaskAssignView.as_view(),
         name="toggle-task-assign",
     ),
     path(

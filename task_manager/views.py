@@ -1,12 +1,16 @@
-from typing import Optional
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import SignUpForm, TaskForm, WorkerUpdateForm
+from .forms import (
+    SignUpForm,
+    TaskForm,
+    TaskRenewForm,
+    WorkerUpdateForm,
+    TaskTypeSearchForm,
+)
 from .models import Worker, Task, TaskType
 
 
@@ -56,27 +60,57 @@ class TaskDeleteView(
         return self.request.user.is_staff
 
 
-@login_required
-def toggle_task_complete(request, pk):
-    task = get_object_or_404(Task, pk=pk)
+class TaskRenewView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    generic.UpdateView,
+):
+    model = Task
+    form_class = TaskRenewForm
 
-    task.is_completed = not task.is_completed
-    task.save()
+    def get_success_url(self):
+        return self.request.user.get_absolute_url()
 
-    return redirect(reverse_lazy("task_manager:task-list"))
+    def test_func(self):
+        return (
+            self.request.user.is_staff
+            or self.request.user in self.get_object().assignees.all()
+        )
 
 
-@login_required
-def toggle_task_assign(request, pk):
-    user = request.user
-    task = get_object_or_404(Task, pk=pk)
+class ToggleTaskCompleteView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    generic.View,
+):
+    def get(self, request, *args, **kwargs):
+        task = get_object_or_404(Task, pk=kwargs["pk"])
 
-    if task in user.tasks.all():
-        user.tasks.remove(pk)
-    else:
-        user.tasks.add(pk)
+        task.is_completed = not task.is_completed
+        task.save()
 
-    return redirect(task.get_absolute_url())
+        return redirect(self.request.user.get_absolute_url())
+
+    def test_func(self):
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+
+        return (
+            self.request.user.is_staff
+            or self.request.user in task.assignees.all()
+        )
+
+
+class ToggleTaskAssignView(LoginRequiredMixin, generic.View):
+    def get(self, request, *args, **kwargs):
+        task = get_object_or_404(Task, pk=kwargs["pk"])
+        user = request.user
+
+        if user in task.assignees.all():
+            task.assignees.remove(user)
+        else:
+            task.assignees.add(user)
+
+        return redirect(task.get_absolute_url())
 
 
 class TaskTypeListView(LoginRequiredMixin, generic.ListView):
@@ -115,6 +149,18 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Worker
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["completed_tasks"] = self.object.tasks.filter(
+            is_completed=True,
+        )
+        context["incomplete_tasks"] = self.object.tasks.filter(
+            is_completed=False,
+        )
+
+        return context
 
 
 class WorkerUpdateView(
