@@ -42,7 +42,7 @@
   
   <hr class="w-75 mx-auto">
 
-  <div class="container">
+  <section id="tasks" class="container">
     <h2 class="fw-light text-center">Assigned tasks</h2>
 
     {% if worker.tasks.all %}
@@ -163,7 +163,7 @@
     {% else %}
       <span class="fw-light fs-4">This user is not assigned any tasks</span>
     {% endif %}
-  </div>
+  </section>
 
   {% if user.is_staff %}
     {% include "includes/worker_delete_modal.html" %}
