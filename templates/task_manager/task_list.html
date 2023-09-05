@@ -10,15 +10,14 @@
 
 {% block content %}
   <h1 class="text-center">
-    Tasks
+    All Tasks
   </h1>
 
   {% if task_list %}
-    <div class="col-11 container justify-content-center">
-      <table class="table table-striped table-hover mt-3">
+    <div class="col-11 container justify-content-center table-responsive">
+      <table class="table table-striped table-hover mt-3 border">
         <thead class="{{ is_dark_mode|yesno:"table-light,table-dark" }}">
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th>Type</th>
             <th>Priority</th>
@@ -30,9 +29,8 @@
         <tbody>
           {% for task in task_list %}
           <tr>
-            <td>{{ task.id }}</td>
             <td>
-              <a class="link-body-emphasis text-decoration-none" href="{% url "task_manager:task-detail" pk=task.id %}">{{ task.name }}</a>
+              <a class="link-body-emphasis text-decoration-none" href="{% url "task_manager:task-detail" pk=task.id %}">{{ task.name|truncatechars:20 }}</a>
             </td>
             <td>{{ task.task_type.name }}</td>
             <td>
@@ -42,16 +40,20 @@
             </td>
             <td>
               {% if task.is_completed %}
-                <span class="text-success-emphasis">{{ task.deadline }}</span>
+                <span class="text-success-emphasis">{{ task.deadline|date:"M j, Y" }}</span>
+              {% elif task.is_overdue %}
+                <span class="text-danger-emphasis">{{ task.deadline|date:"M j, Y" }}</span>
               {% elif task.is_at_risk %}
-                <span class="text-warning-emphasis">{{ task.deadline }}</span>
+                <span class="text-warning-emphasis">{{ task.deadline|date:"M j, Y" }}</span>
               {% else %}
-                <span>{{ task.deadline }}</span>
+                <span>{{ task.deadline|date:"M j, Y" }}</span>
               {% endif %}
             </td>
             <td>
               {% if task.is_completed %}
                 <span class="badge rounded-pill text-bg-success"><i class="bi bi-check2"></i></span>
+              {% elif task.is_overdue %}
+                <span class="badge rounded-pill text-bg-danger"><i class="bi bi-exclamation"></i></span>
               {% elif task.is_at_risk %}
                 <span class="badge rounded-pill text-bg-warning"><i class="bi bi-exclamation"></i></span>
               {% else %}
@@ -59,29 +61,81 @@
               {% endif %}
             </td>
             <td>
-              <a
-                class="text-success text-decoration-none"
-                href="{% url "task_manager:toggle-task-complete" pk=task.id %}"
-              >
-                {% if task.is_completed %}
-                  <i class="bi bi-toggle-on"></i>
+              {% if user.is_staff or user in task.assignees.all %}
+                {% if task.is_overdue %}
+                  <a
+                    href="{% url "task_manager:task-renew" pk=task.id %}"
+                    class="btn badge {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                  >
+                    <i class="bi bi-calendar-plus"></i>
+                  </a>
                 {% else %}
-                  <i class="bi bi-toggle-off"></i>
+                  <form
+                    action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
+                    class="d-inline"
+                    method="post"
+                    novalidate
+                  >
+                    {% csrf_token %}
+                    {% if task.is_completed %}
+                      <button
+                        type="submit"
+                        class="btn badge text-bg-success"
+                      >
+                        <i class="bi bi-toggle-on"></i>
+                      </button>
+                    {% else %}
+                      <button
+                        type="submit"
+                        class="btn badge {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                      >
+                        <i class="bi bi-toggle-off"></i>
+                      </button>
+                    {% endif %}
+                    <input type="hidden" name="referer" value="task-list">
+                  </form>
                 {% endif %}
-              </a>
-              <a
-                class="text-warning text-decoration-none"
-                href="{% url "task_manager:task-update" pk=task.id %}"
-              >
-                <i class="ms-2 bi bi-pencil-fill"></i>
-              </a>
+                <a
+                  class="text-warning text-decoration-none"
+                  href="{% url "task_manager:task-update" pk=task.id %}"
+                >
+                  <i class="ms-2 bi bi-pencil-fill"></i>
+                </a>
+              {% else %}
+                {% if task.is_overdue %}
+                  <span
+                    class="btn disabled badge opacity-25 {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                  >
+                    <i class="bi bi-calendar-plus"></i>
+                  </span>
+                {% else %}
+                  {% if task.is_completed %}
+                    <span
+                      class="btn disabled badge text-bg-success border-success opacity-25"
+                    >
+                      <i class="bi bi-toggle-on"></i>
+                    </span>
+                  {% else %}
+                    <span
+                      class="btn disabled badge opacity-25 {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                    >
+                      <i class="bi bi-toggle-off"></i>
+                    </span>
+                  {% endif %}
+                {% endif %}
+                <span
+                  class="text-warning opacity-25"
+                >
+                  <i class="ms-2 bi bi-pencil-fill"></i>
+                </span>
+              {% endif %}
               {% if user.is_staff %}
-              <a
-                class="ms-2 text-danger text-decoration-none"
-                href="{% url "task_manager:task-delete" pk=task.id %}"
-              >
-                <i class="bi bi-trash-fill"></i>
-              </a>
+                <a
+                  class="ms-2 text-danger text-decoration-none"
+                  href="{% url "task_manager:task-delete" pk=task.id %}"
+                >
+                  <i class="bi bi-trash-fill"></i>
+                </a>
               {% endif %}
             </td>
           </tr>
