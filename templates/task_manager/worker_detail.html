@@ -98,7 +98,10 @@
                     </a>
                   </h5>
                   <p class="card-text">{{ task.description|truncatechars:64 }}</p>
-                  <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
+                  <div class="d-flex justify-content-between">
+                    <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
+                    <span class="badge rounded-pill {{ task.priority }}-priority">{{ task.priority|capfirst }}</span>
+                  </div>
                 </div>
                 <div class="card-footer text-body-secondary d-flex justify-content-between">
                   <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
@@ -145,6 +148,7 @@
                   </a>
                 </h5>
                 <p class="card-text">{{ task.description|truncatechars:64 }}</p>
+                <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
               </div>
               <div class="card-footer text-body-secondary d-flex justify-content-between">
                 <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
