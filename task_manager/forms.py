@@ -1,4 +1,6 @@
 import datetime
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -81,6 +83,18 @@ class WorkerUpdateForm(forms.ModelForm):
         )
 
 
+class CustomSearch(Field):
+    template = "fields/custom_search.html"
+
+
+class NameSearchHelper(FormHelper):
+
+    form_method = "GET"
+    layout = Layout(
+        CustomSearch("name"),
+    )
+
+
 class TaskSearchForm(forms.Form):
 
     name = forms.CharField(
@@ -92,17 +106,9 @@ class TaskSearchForm(forms.Form):
         ),
     )
 
-
-class WorkerSearchForm(forms.Form):
-
-    username = forms.CharField(
-        max_length=150,
-        required=False,
-        label="",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Search by username..."}
-        ),
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = NameSearchHelper()
 
 
 class TaskTypeSearchForm(forms.Form):
@@ -115,3 +121,27 @@ class TaskTypeSearchForm(forms.Form):
             attrs={"placeholder": "Search by name"}
         ),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = NameSearchHelper()
+
+
+class WorkerSearchForm(forms.Form):
+
+    username = forms.CharField(
+        max_length=150,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Search by username"}
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "GET"
+        self.helper.layout = Layout(
+            CustomSearch("username"),
+        )

@@ -9,7 +9,9 @@ from .forms import (
     TaskForm,
     TaskRenewForm,
     WorkerUpdateForm,
+    TaskSearchForm,
     TaskTypeSearchForm,
+    WorkerSearchForm,
 )
 from .models import Worker, Task, TaskType
 
@@ -31,6 +33,27 @@ def toggle_theme(request, **kwargs):
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
     paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        name = self.request.GET.get("name", "")
+        context["search_form"] = TaskSearchForm(initial={
+            "name": name,
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+
+        form = TaskSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+
+        return queryset
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
@@ -68,9 +91,6 @@ class TaskRenewView(
     model = Task
     form_class = TaskRenewForm
 
-    def get_success_url(self):
-        return self.request.user.get_absolute_url()
-
     def test_func(self):
         return (
             self.request.user.is_staff
@@ -86,10 +106,18 @@ class ToggleTaskCompleteView(
     def get(self, request, *args, **kwargs):
         task = get_object_or_404(Task, pk=kwargs["pk"])
 
+        return redirect(task.get_absolute_url())
+
+    def post(self, request, *args, **kwargs):
+        task = get_object_or_404(Task, pk=kwargs["pk"])
+
         task.is_completed = not task.is_completed
         task.save()
 
-        return redirect(self.request.user.get_absolute_url())
+        if self.request.POST["referer"] == "worker-detail":
+            return redirect(self.request.user.get_absolute_url())
+        else:
+            return redirect(reverse_lazy("task_manager:task-list"))
 
     def test_func(self):
         task = get_object_or_404(Task, pk=self.kwargs["pk"])
@@ -97,11 +125,17 @@ class ToggleTaskCompleteView(
         return (
             self.request.user.is_staff
             or self.request.user in task.assignees.all()
+            and not task.is_overdue()
         )
 
 
 class ToggleTaskAssignView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
+        task = get_object_or_404(Task, pk=kwargs["pk"])
+
+        return redirect(task.get_absolute_url())
+
+    def post(self, request, *args, **kwargs):
         task = get_object_or_404(Task, pk=kwargs["pk"])
         user = request.user
 
@@ -116,6 +150,27 @@ class ToggleTaskAssignView(LoginRequiredMixin, generic.View):
 class TaskTypeListView(LoginRequiredMixin, generic.ListView):
     model = TaskType
     paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        name = self.request.GET.get("name", "")
+        context["search_form"] = TaskTypeSearchForm(initial={
+            "name": name,
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = TaskType.objects.all()
+
+        form = TaskTypeSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+
+        return queryset
 
 
 class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
@@ -145,6 +200,27 @@ class TaskTypeDeleteView(
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = Worker
     paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        username = self.request.GET.get("username", "")
+        context["search_form"] = WorkerSearchForm(initial={
+            "username": username,
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = Worker.objects.all()
+
+        form = WorkerSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                username__icontains=form.cleaned_data["username"]
+            )
+
+        return queryset
 
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
