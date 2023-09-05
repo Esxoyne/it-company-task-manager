@@ -45,7 +45,16 @@
         class="nav-link {% if request.resolver_match.url_name == "task-list" %}active{% else %}link-body-emphasis{% endif %}"
       >
         <i class="bi bi-list-task pe-none me-2"></i>
-        Tasks
+        All Tasks
+      </a>
+    </li>
+    <li>
+      <a
+        href="{% url "task_manager:worker-detail" pk=user.id %}"
+        class="nav-link {% if worker_is_user %}active{% else %}link-body-emphasis{% endif %}"
+      >
+        <i class="bi bi-person-lines-fill pe-none me-2"></i>
+        My Tasks
       </a>
     </li>
     <li>

@@ -236,6 +236,8 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
             is_completed=False,
         )
 
+        context["worker_is_user"] = self.object == self.request.user
+
         return context
 
 

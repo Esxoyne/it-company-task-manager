@@ -48,14 +48,36 @@
             Home
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item dropdown">
           <a
             class="nav-link {% if request.resolver_match.url_name == "task-list" %}active{% endif %}"
             href="{% url "task_manager:task-list" %}"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
             <i class="bi bi-list-task pe-none me-2"></i>
             Tasks
           </a>
+          <ul class="dropdown-menu mt-3">
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url "task_manager:task-list" %}"
+              >
+                <i class="bi bi-list-task pe-none me-2"></i>
+                All Tasks
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url "task_manager:worker-detail" pk=user.id %}"
+              >
+                <i class="bi bi-person-lines-fill pe-none me-2"></i>
+                My Tasks
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
           <a
