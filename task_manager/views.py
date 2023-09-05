@@ -44,7 +44,9 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Task.objects.all()
+        queryset = Task.objects.prefetch_related(
+            "assignees"
+        ).select_related("task_type")
 
         form = TaskSearchForm(self.request.GET)
 
@@ -161,7 +163,7 @@ class TaskTypeListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = TaskType.objects.all()
+        queryset = TaskType.objects.prefetch_related("tasks")
 
         form = TaskTypeSearchForm(self.request.GET)
 
@@ -211,7 +213,9 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Worker.objects.all()
+        queryset = Worker.objects.prefetch_related(
+            "tasks"
+        ).select_related("position")
 
         form = WorkerSearchForm(self.request.GET)
 
@@ -229,10 +233,15 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["completed_tasks"] = self.object.tasks.filter(
+        all_tasks = self.object.tasks.prefetch_related(
+            "assignees"
+        ).select_related("task_type")
+
+        context["completed_tasks"] = all_tasks.filter(
             is_completed=True,
         )
-        context["incomplete_tasks"] = self.object.tasks.filter(
+
+        context["incomplete_tasks"] = all_tasks.filter(
             is_completed=False,
         )
 
