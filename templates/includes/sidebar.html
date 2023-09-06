@@ -44,14 +44,14 @@
         href="{% url "task_manager:task-list" %}"
         class="nav-link {% if request.resolver_match.url_name == "task-list" %}active{% else %}link-body-emphasis{% endif %}"
       >
-        <i class="bi bi-list-task pe-none me-2"></i>
+        <i class="bi bi-card-checklist pe-none me-2"></i>
         All Tasks
       </a>
     </li>
     <li>
       <a
         href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
-        class="nav-link {% if worker_is_user %}active{% else %}link-body-emphasis{% endif %}"
+        class="nav-link {% if worker_detail_is_user %}active{% else %}link-body-emphasis{% endif %}"
       >
         <i class="bi bi-person-lines-fill pe-none me-2"></i>
         My Tasks

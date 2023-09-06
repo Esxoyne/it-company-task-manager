@@ -1,7 +1,9 @@
+{% load query_transform %}
+
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
     <li class="page-item {{ page_obj.has_previous|yesno:",disabled"}}">
-      <a href="?page=1" class="page-link d-flex align-items-center" aria-label="First">
+      <a href="?{% query_transform request page=1 %}" class="page-link d-flex align-items-center" aria-label="First">
         &laquo;
       </a>
     </li>
@@ -14,14 +16,18 @@
           </li>
         {% else %}
           <li class="page-item">
-            <a href="?page={{ page_number }}" class="page-link">{{ page_number }}</a>
+            <a href="?{% query_transform request page=page_number %}" class="page-link">{{ page_number }}</a>
           </li>
         {% endif %}
       {% endif %}
     {% endfor %}
   
     <li class="page-item {{ page_obj.has_next|yesno:",disabled"}}">
-      <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
+      <a
+        href="?{% query_transform request page=page_obj.paginator.num_pages %}"
+        class="page-link" 
+        aria-label="Last"
+      >
         &raquo;
       </a>
     </li>
