@@ -39,7 +39,7 @@
       <h4 class="font-monospace">{{ worker.position }}</h4>
     </div>
   </div>
-  
+
   <hr>
 
   <section id="tasks" class="container">
@@ -105,7 +105,12 @@
               </div>
               <div class="card-footer text-body-secondary d-flex justify-content-between">
                 <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
-                <span><i class="bi bi-person"></i> {{ task.assignees.count }} assignee{{ task.assignees.count|pluralize }}</span>
+                <a
+                  href="{% url "task_manager:task-detail" pk=task.id %}#assignees"
+                  class="text-reset text-decoration-none"
+                >
+                  <span><i class="bi bi-person"></i> {{ task.assignees.count }} assignee{{ task.assignees.count|pluralize }}</span>
+                </a>
               </div>
             </div>
           {% empty %}

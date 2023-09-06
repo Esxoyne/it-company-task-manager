@@ -10,11 +10,11 @@
 
 {% block content %}
   <h1 class="text-center">
-    Task Type List
+    All Task Types
   </h1>
 
   {% if tasktype_list %}
-    <div class="col-11 container justify-content-center">
+    <div class="col-11 container justify-content-center table-responsive">
       <table class="table table-sm table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden">
         <thead class="{{ is_dark_mode|yesno:"table-light,table-dark" }}">
           <tr>

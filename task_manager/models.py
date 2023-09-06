@@ -84,7 +84,7 @@ class Task(models.Model):
         return (
             datetime.date.today()
             < self.deadline
-            <= datetime.date.today() + datetime.timedelta(days=3)
+            <= datetime.date.today() + datetime.timedelta(days=2)
         )
 
     def is_overdue(self):
