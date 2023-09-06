@@ -4,56 +4,110 @@
   {{ task.name|truncatechars:32 }}
 {% endblock %}
 
+{% block navigation %}
+  {% include "includes/nav_task_detail.html" %}
+{% endblock %}
+
 {% block content %}
-  <h1>{{ task.name }}</h1>
+  <div class="row align-items-center">
+    <div class="col-auto">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="128"
+        height="128"
+        fill="currentColor"
+        class="bi bi-list-task"
+        viewBox="0 0 16 16"
+      >
+        <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
+        <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/>
+        <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
+      </svg>
+    </div>
+    <div class="col-auto me-auto">
+      <h2>{{ task.name }}</h2>
+    </div>
+    <div class="col-auto my-3">
+      {% if task.is_completed %}
+        <h4 class="font-monospace text-success-emphasis">Done</h4>
+      {% elif task.is_overdue %}
+        <h4 class="font-monospace text-danger-emphasis">Overdue</h4>
+      {% else %}
+        <h4 class="font-monospace">In progress</h4>
+      {% endif %}
+    </div>
+  </div>
 
-  {% if user.is_staff %}
-    <button
-      type="button"
-      href="{% url "task_manager:task-delete" pk=task.id %}"
-      class="btn btn-danger"
-      data-bs-toggle="modal"
-      data-bs-target="#taskDelete"
-    >
-      Delete
-    </button>
-  {% endif %}
-  <a href="{% url "task_manager:task-update" pk=task.id %}" class="btn btn-secondary">
-    Update
-  </a>
-  {% if task.is_completed %}
-    <a href="{% url "task_manager:toggle-task-complete" pk=task.id %}" class="btn btn-secondary">
-      Undo
-    </a>
-  {% else %}
-    <a href="{% url "task_manager:toggle-task-complete" pk=task.id %}" class="btn btn-success">
-      Complete
-    </a>
-  {% endif %}
+  <div class="container-fluid">
+    <span class="fs-4 font-monospace">{{ task.task_type }}</span>
+    <p class="mt-2 fs-5">{{ task.description }}</p>
+  </div>
 
-  <p>Type: {{ task.task_type.name }}</p>
-  <p>Priority: <strong>{{ task.priority|capfirst }}</strong></p>
+  <div class="container-fluid mt-2 d-flex justify-content-between align-items-center">
+    <span class="fs-5 text-muted">
+      <i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}
+    </span>
+    <span class="badge fs-6 {{ task.priority }}-priority">
+      {{ task.priority|capfirst }}
+    </span>
+  </div>
 
-  <h1>
-    Assignees
-
-    {% if task in user.tasks.all %}
-      <a href="{% url "task_manager:toggle-task-assign" pk=task.id %}" class="btn btn-danger link-to-page">
-        Delete me from this task
-      </a>
-    {% else %}
-      <a href="{% url "task_manager:toggle-task-assign" pk=task.id %}" class="btn btn-success link-to-page">
-        Assign me to this task
-      </a>
-    {% endif %}
-
-  </h1>
   <hr>
-  <ul>
-    {% for worker in task.assignees.all %}
-      <li>{{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})</li>
-    {% endfor %}
-  </ul>
+
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col-sm-12 col-md-6">
+        <div class="d-flex justify-content-between">
+          <h3 class="fw-light mb-3">Assignees</h3>
+          <form
+            action="{% url "task_manager:toggle-task-assign" pk=task.id %}"
+            class="ms-auto d-inline"
+            method="post"
+            novalidate
+          >
+            {% csrf_token %}
+            {% if task in user.tasks.all %}
+              <button
+                type="submit"
+                class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+              >
+                <i class="bi bi-person-dash text-danger-emphasis"></i> Unassign me
+              </button>
+            {% else %}
+              <button
+                type="submit"
+                class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+              >
+                <i class="bi bi-person-add text-success-emphasis"></i> Assign to me
+              </button>
+            {% endif %}
+          </form>
+        </div>
+        {% for worker in task.assignees.all %}
+          <div class="card border-secondary mb-3">
+            <div class="card-body">
+              <h5 class="card-title d-flex align-items-center">
+                <i class="bi bi-person fs-3 me-2"></i>
+                <a
+                  href="{% url "task_manager:worker-detail" pk=worker.id %}"
+                  class="text-decoration-none link-body-emphasis"
+                >
+                  {{ worker.username }}
+                </a>
+              </h5>
+              <p class="card-text">{{ worker.first_name }} {{ worker.last_name }}</p>
+              <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ worker.position }}</span>
+            </div>
+          </div>
+        {% empty %}
+          <p class="fw-light fs-5">No one is assigned this task</p>
+        {% endfor %}
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <h3 class="fw-light mb-3">Project</h3>
+      </div>
+    </div>
+  </div>
 
   {% if user.is_staff %}
     {% include "includes/task_delete_modal.html" %}

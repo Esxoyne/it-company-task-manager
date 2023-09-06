@@ -68,9 +68,21 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("task_manager:task-list")
 
 
-class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
+class TaskUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    generic.UpdateView,
+):
     model = Task
     form_class = TaskForm
+
+    def test_func(self):
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+
+        return (
+            self.request.user.is_staff
+            or self.request.user in task.assignees.all()
+        )
 
 
 class TaskDeleteView(
@@ -118,6 +130,8 @@ class ToggleTaskCompleteView(
 
         if self.request.POST["referer"] == "worker-detail":
             return redirect(self.request.user.get_absolute_url())
+        elif self.request.POST["referer"] == "task-detail":
+            return redirect(task.get_absolute_url())
         else:
             return redirect(reverse_lazy("task_manager:task-list"))
 

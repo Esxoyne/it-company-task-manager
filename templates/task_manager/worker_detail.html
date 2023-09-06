@@ -40,77 +40,77 @@
     </div>
   </div>
   
-  <hr class="w-75 mx-auto">
+  <hr>
 
   <section id="tasks" class="container">
-    <h2 class="fw-light text-center">Assigned tasks</h2>
+    <h2 class="fw-light">Assigned tasks</h2>
 
     {% if worker.tasks.all %}
       <div class="row mt-4">
         <div class="col-sm-12 col-md-6">
           <h3 class="fw-light mb-3">In Progress</h3>
-            {% for task in incomplete_tasks %}
-              <div class="card border-secondary mb-3">
-                <div
-                  class="card-header d-flex justify-content-between align-items-center"
-                >
+          {% for task in incomplete_tasks %}
+            <div class="card border-secondary mb-3">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                {% if task.is_overdue %}
+                  <span class="text-danger-emphasis">Overdue</span>
+                {% elif task.is_at_risk %}
+                  <span class="text-warning-emphasis">At Risk</span>
+                {% else %}
+                  In Progress
+                {% endif %}
+                {% if worker == user %}
                   {% if task.is_overdue %}
-                    <span class="text-danger-emphasis">Overdue</span>
-                  {% elif task.is_at_risk %}
-                    <span class="text-warning-emphasis">At Risk</span>
-                  {% else %}
-                    In Progress
-                  {% endif %}
-                  {% if worker == user %}
-                    {% if task.is_overdue %}
-                      <a
-                        href="{% url "task_manager:task-renew" pk=task.id %}"
-                        class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
-                      >
-                        Renew
-                      </a>
-                    {% else %}
-                    <form
-                      action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
-                      class="d-inline"
-                      method="post"
-                      novalidate
-                    >
-                      {% csrf_token %}
-                      <button
-                        type="submit"
-                        class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
-                      >
-                        Complete
-                      </button>
-                      <input type="hidden" name="referer" value="worker-detail">
-                    </form>
-                    {% endif %}
-                  {% endif %}
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">
                     <a
-                      href="{% url "task_manager:task-detail" pk=task.id %}"
-                      class="text-decoration-none link-body-emphasis"
+                      href="{% url "task_manager:task-renew" pk=task.id %}"
+                      class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
                     >
-                      {{ task.name }}
+                      Renew
                     </a>
-                  </h5>
-                  <p class="card-text">{{ task.description|truncatechars:64 }}</p>
-                  <div class="d-flex justify-content-between">
-                    <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
-                    <span class="badge rounded-pill {{ task.priority }}-priority">{{ task.priority|capfirst }}</span>
-                  </div>
-                </div>
-                <div class="card-footer text-body-secondary d-flex justify-content-between">
-                  <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
-                  <span><i class="bi bi-person"></i> {{ task.assignees.count }} assignee{{ task.assignees.count|pluralize }}</span>
+                  {% else %}
+                  <form
+                    action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
+                    class="d-inline"
+                    method="post"
+                    novalidate
+                  >
+                    {% csrf_token %}
+                    <button
+                      type="submit"
+                      class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                    >
+                      Complete
+                    </button>
+                    <input type="hidden" name="referer" value="worker-detail">
+                  </form>
+                  {% endif %}
+                {% endif %}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a
+                    href="{% url "task_manager:task-detail" pk=task.id %}"
+                    class="text-decoration-none link-body-emphasis"
+                  >
+                    {{ task.name }}
+                  </a>
+                </h5>
+                <p class="card-text">{{ task.description|truncatechars:64 }}</p>
+                <div class="d-flex justify-content-between">
+                  <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
+                  <span class="badge rounded-pill {{ task.priority }}-priority">{{ task.priority|capfirst }}</span>
                 </div>
               </div>
-            {% empty %}
-              <p class="fw-light fs-5">No tasks started</p>
-            {% endfor %}
+              <div class="card-footer text-body-secondary d-flex justify-content-between">
+                <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
+                <span><i class="bi bi-person"></i> {{ task.assignees.count }} assignee{{ task.assignees.count|pluralize }}</span>
+              </div>
+            </div>
+          {% empty %}
+            <p class="fw-light fs-5">No tasks started</p>
+          {% endfor %}
         </div>
         <div class="col-sm-12 col-md-6">
           <h3 class="fw-light mb-3">Completed</h3>
