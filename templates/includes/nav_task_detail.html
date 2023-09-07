@@ -7,39 +7,45 @@
       <i class="bi bi-arrow-left"></i> Go back
     </a>
     {% if user.is_staff %}
-      <form
-        action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
-        class="ms-auto d-inline"
-        method="post"
-        novalidate
-      >
-        {% csrf_token %}
-        {% if task.is_completed %}
-          <button
-            type="submit"
-            class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
-          >
-            Undo
-          </button>
-        {% else %}
-          <button
-            type="submit"
-            class="btn btn-link font-monospace link-success text-decoration-none"
-          >
-            Complete
-          </button>
-        {% endif %}
-        <input type="hidden" name="referer" value="task-detail">
-      </form>
-      {% if task.is_overdue %}
+      {% if not task.is_overdue %}
+        <form
+          action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
+          class="ms-auto d-inline"
+          method="post"
+          novalidate
+        >
+          {% csrf_token %}
+          {% if task.is_completed %}
+            <button
+              type="submit"
+              class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+            >
+              Undo
+            </button>
+          {% else %}
+            <button
+              type="submit"
+              class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+            >
+              Complete
+            </button>
+          {% endif %}
+          <input type="hidden" name="referer" value="task-detail">
+        </form>
+      {% else %}
         <a
           href="{% url "task_manager:task-renew" pk=task.id %}"
-          class="font-monospace text-decoration-none link-body-emphasis me-3"
+          class="ms-auto font-monospace text-decoration-none link-body-emphasis me-3"
         >
           Renew
         </a>
       {% endif %}
-      <a class="font-monospace text-decoration-none link-body-emphasis me-3" href="{% url "task_manager:task-update" pk=task.id %}">Edit task</a>
+      <a
+        class="font-monospace text-decoration-none link-body-emphasis me-3"
+        href="{% url "task_manager:task-update" pk=task.id %}"
+      >
+        Edit task
+      </a>
       <span
         type="button"
         class="font-monospace link-danger"
@@ -58,7 +64,7 @@
       <a class="font-monospace text-decoration-none link-body-emphasis" href="{% url "task_manager:task-update" pk=task.id %}">Edit task</a>
     {% elif task in user.tasks.all %}
       <form
-        action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
+        action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
         class="ms-auto d-inline"
         method="post"
         novalidate

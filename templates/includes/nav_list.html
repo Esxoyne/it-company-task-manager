@@ -10,6 +10,10 @@
         <a href="{% url "task_manager:task-type-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
+      {% elif model == "project" %}
+        <a href="{% url "task_manager:project-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-plus-square"></i> Create
+        </a>
       {% endif %}
     {% endif %}
     {% include "includes/nav_links.html" %}
