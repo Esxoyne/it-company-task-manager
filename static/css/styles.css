@@ -69,6 +69,26 @@
   color: white;
 }
 
+.text-low-priority {
+  color: var(--bs-success-text-emphasis);
+}
+
+.text-medium-priority {
+  color: var(--bs-primary-text-emphasis);
+}
+
+.text-high-priority {
+  color: var(--bs-warning-text-emphasis);
+}
+
+.text-urgent-priority {
+  color: var(--bs-danger-text-emphasis);
+}
+
+.project-progress {
+  height: 20px;
+}
+
 .page-item .page-link {
   color: var(--bs-body-color);
 }
