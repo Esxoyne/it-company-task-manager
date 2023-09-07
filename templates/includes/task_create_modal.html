@@ -1,0 +1,27 @@
+{% load crispy_forms_filters %}
+
+<div class="modal fade" id="taskAdd" tabindex="-1" aria-labelledby="taskAdd" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url "task_manager:task-create" %}">
+        <div class="modal-body px-4">
+          <p class="fw-light fs-3 text-center">Create a new task</p>
+          {% csrf_token %}
+          {{ task_create_form|crispy }}
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button
+            type="button"
+            class="btn {{ is_dark_mode|yesno:"btn-outline-light,btn-outline-dark" }}"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-outline-success">
+            <i class="bi bi-plus-circle"></i> Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
