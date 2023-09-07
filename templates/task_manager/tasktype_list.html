@@ -10,16 +10,16 @@
 
 {% block content %}
   <h1 class="text-center">
-    All Task Types
+    Task Types
   </h1>
 
   {% if tasktype_list %}
     <div class="col-11 container justify-content-center table-responsive">
-      <table class="table table-sm table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden">
+      <table class="table table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden text-center">
         <thead class="{{ is_dark_mode|yesno:"table-light,table-dark" }}">
           <tr>
             <th></th>
-            <th>Name</th>
+            <th class="text-start">Name</th>
             <th>Tasks</th>
             <th>Actions</th>
           </tr>
@@ -28,7 +28,7 @@
           {% for tasktype in tasktype_list %}
           <tr>
             <td><i class="bi bi-tag-fill"></i></td>
-            <td>
+            <td class="text-start">
               <span class="text-body-emphasis">
                 {{ tasktype.name }}
               </span>

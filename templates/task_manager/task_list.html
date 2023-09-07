@@ -9,17 +9,26 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">
-    All Tasks
-  </h1>
+  <h1 class="text-center">Tasks</h1>
+
+  <h3>
+    <a
+      href="{% url "task_manager:task-type-list" %}"
+      class="text-decoration-none text-reset link-body-emphasis"
+    >
+      Task Types
+    </a>
+  </h3>
 
   {% if task_list %}
     <div class="col-11 container justify-content-center table-responsive">
-      <table class="table table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden">
+      <table class="table table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden text-center">
         <thead class="{{ is_dark_mode|yesno:"table-light,table-dark" }}">
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Type</th>
+            <th>Project</th>
             <th>Priority</th>
             <th>Due</th>
             <th>Status</th>
@@ -30,9 +39,30 @@
           {% for task in task_list %}
           <tr>
             <td>
-              <a class="link-body-emphasis text-decoration-none" href="{% url "task_manager:task-detail" pk=task.id %}">{{ task.name|truncatechars:20 }}</a>
+              <a
+                class="link-body-emphasis text-decoration-none"
+                href="{% url "task_manager:task-detail" pk=task.id %}"
+              >
+                <i class="bi bi-check2-square"></i>
+              </a>
             </td>
-            <td>{{ task.task_type.name }}</td>
+            <td>
+              <a
+                class="link-body-emphasis text-decoration-none"
+                href="{% url "task_manager:task-detail" pk=task.id %}"
+              >
+                {{ task.name|truncatechars:16 }}
+              </a>
+            </td>
+            <td>{{ task.task_type.name|truncatechars:12 }}</td>
+            <td class="text-center">
+              <a
+                class="link-body-emphasis text-decoration-none"
+                href="{% url "task_manager:project-detail" pk=task.project.id %}"
+              >
+                <i class="bi bi-kanban-fill"></i>
+              </a>
+            </td>
             <td>
               <span class="badge rounded-pill {{ task.priority }}-priority">
                 {{ task.priority|upper }}
@@ -60,8 +90,8 @@
                 <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}"><i class="bi bi-arrow-clockwise"></i></span>
               {% endif %}
             </td>
-            <td>
-              {% if user.is_staff or user in task.assignees.all %}
+            <td class="text-center">
+              {% if user in task.assignees.all %}
                 {% if task.is_overdue %}
                   <a
                     href="{% url "task_manager:task-renew" pk=task.id %}"
@@ -71,7 +101,7 @@
                   </a>
                 {% else %}
                   <form
-                    action="{% url "task_manager:toggle-task-complete" pk=task.id %}"
+                    action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
                     class="d-inline"
                     method="post"
                     novalidate
@@ -92,7 +122,6 @@
                         <i class="bi bi-toggle-off"></i>
                       </button>
                     {% endif %}
-                    <input type="hidden" name="referer" value="task-list">
                   </form>
                 {% endif %}
                 <a
@@ -123,11 +152,20 @@
                     </span>
                   {% endif %}
                 {% endif %}
-                <span
-                  class="text-warning opacity-25"
-                >
-                  <i class="ms-2 bi bi-pencil-fill"></i>
-                </span>
+                {% if user.is_staff %}
+                  <a
+                    class="text-warning text-decoration-none"
+                    href="{% url "task_manager:task-update" pk=task.id %}"
+                  >
+                    <i class="ms-2 bi bi-pencil-fill"></i>
+                  </a>
+                {% else %}
+                  <span
+                    class="text-warning opacity-25"
+                  >
+                    <i class="ms-2 bi bi-pencil-fill"></i>
+                  </span>
+                {% endif %}
               {% endif %}
               {% if user.is_staff %}
                 <a
