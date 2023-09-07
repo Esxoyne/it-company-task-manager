@@ -6,11 +6,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Worker, Task
+from .models import Worker, Task, Project
 
 
 class SignUpForm(UserCreationForm):
-
     class Meta(UserCreationForm.Meta):
         model = Worker
         fields = UserCreationForm.Meta.fields + (
@@ -21,8 +20,34 @@ class SignUpForm(UserCreationForm):
         )
 
 
-class TaskForm(forms.ModelForm):
+class TaskCreateForm(forms.ModelForm):
+    deadline = forms.DateField(
+        widget=forms.DateInput(
+            attrs={"type": "date"}
+        )
+    )
 
+    class Meta:
+        model = Task
+        fields = (
+            "name",
+            "description",
+            "project",
+            "task_type",
+            "priority",
+            "deadline",
+        )
+
+    def clean_deadline(self):
+        return validate_deadline(self.cleaned_data["deadline"])
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+        self.fields["project"].queryset = self.request.user.projects.all()
+
+
+class TaskUpdateForm(forms.ModelForm):
     assignees = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -39,18 +64,18 @@ class TaskForm(forms.ModelForm):
         fields = (
             "name",
             "description",
-            "deadline",
-            "priority",
             "task_type",
+            "priority",
+            "deadline",
             "assignees",
         )
 
-    def clean_deadline(self):
-        return validate_deadline(self.cleaned_data["deadline"])
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["assignees"].queryset = self.instance.project.members.all()
 
 
 class TaskRenewForm(forms.ModelForm):
-
     deadline = forms.DateField(
         widget=forms.DateInput(
             attrs={"type": "date"}
@@ -72,8 +97,27 @@ def validate_deadline(deadline):
     return deadline
 
 
-class WorkerUpdateForm(forms.ModelForm):
+class ProjectForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
 
+    class Meta:
+        model = Project
+        fields = (
+            "name",
+            "description",
+            "members",
+        )
+
+
+class ProjectTaskAddForm(TaskCreateForm):
+    project = forms.IntegerField(widget=forms.HiddenInput())
+
+
+class WorkerUpdateForm(forms.ModelForm):
     class Meta:
         model = Worker
         fields = (
@@ -88,7 +132,6 @@ class CustomSearch(Field):
 
 
 class NameSearchHelper(FormHelper):
-
     form_method = "GET"
     layout = Layout(
         CustomSearch("name"),
@@ -96,7 +139,6 @@ class NameSearchHelper(FormHelper):
 
 
 class TaskSearchForm(forms.Form):
-
     name = forms.CharField(
         max_length=64,
         required=False,
@@ -112,7 +154,6 @@ class TaskSearchForm(forms.Form):
 
 
 class TaskTypeSearchForm(forms.Form):
-
     name = forms.CharField(
         max_length=32,
         required=False,
@@ -128,7 +169,6 @@ class TaskTypeSearchForm(forms.Form):
 
 
 class WorkerSearchForm(forms.Form):
-
     username = forms.CharField(
         max_length=150,
         required=False,
@@ -145,3 +185,18 @@ class WorkerSearchForm(forms.Form):
         self.helper.layout = Layout(
             CustomSearch("username"),
         )
+
+
+class ProjectSearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=64,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Search by name"}
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = NameSearchHelper()
