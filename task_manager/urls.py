@@ -27,13 +27,13 @@ urlpatterns = [
     ),
     path(
         "tasks/<int:pk>/toggle-complete/",
-        views.ToggleTaskCompleteView.as_view(),
-        name="toggle-task-complete",
+        views.TaskToggleCompleteView.as_view(),
+        name="task-toggle-complete",
     ),
     path(
         "tasks/<int:pk>/toggle-assign/",
-        views.ToggleTaskAssignView.as_view(),
-        name="toggle-task-assign",
+        views.TaskToggleAssignView.as_view(),
+        name="task-toggle-assign",
     ),
     path(
         "task-types/",
@@ -54,6 +54,36 @@ urlpatterns = [
         "task-types/<int:pk>/delete/",
         views.TaskTypeDeleteView.as_view(),
         name="task-type-delete"
+    ),
+    path(
+        "projects/",
+        views.ProjectListView.as_view(),
+        name="project-list",
+    ),
+    path(
+        "projects/create/",
+        views.ProjectCreateView.as_view(),
+        name="project-create",
+    ),
+    path(
+        "projects/<int:pk>/",
+        views.ProjectDetailView.as_view(),
+        name="project-detail",
+    ),
+    path(
+        "projects/<int:pk>/update/",
+        views.ProjectUpdateView.as_view(),
+        name="project-update",
+    ),
+    path(
+        "projects/<int:pk>/delete/",
+        views.ProjectDeleteView.as_view(),
+        name="project-delete",
+    ),
+    path(
+        "projects/<int:pk>/toggle-join/",
+        views.ProjectToggleJoinView.as_view(),
+        name="project-toggle-join",
     ),
     path("team/", views.WorkerListView.as_view(), name="worker-list"),
     path(
