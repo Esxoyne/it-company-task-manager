@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Worker, Task, Project
+from .models import Position, TaskType, Worker, Task, Project
 
 
 class SignUpForm(UserCreationForm):
@@ -167,3 +167,24 @@ class WorkerSearchForm(forms.Form):
         self.helper.layout = Layout(
             CustomSearch("username"),
         )
+
+
+class TaskFilterForm(forms.Form):
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        required=False,
+        label="Project",
+    )
+    task_type = forms.ModelChoiceField(
+        queryset=TaskType.objects.all(),
+        required=False,
+        label="Type"
+    )
+
+
+class WorkerFilterForm(forms.Form):
+    position = forms.ModelChoiceField(
+        queryset=Position.objects.all(),
+        required=False,
+        label="Position",
+    )
