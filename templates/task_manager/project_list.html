@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">
-    Projects
-  </h1>
+  <h1 class="text-center fw-light mb-3">Projects</h1>
 
   {% if project_list %}
     <div class="col-xl-11 col-xxl-9 container justify-content-center table-responsive">
@@ -85,6 +83,6 @@
       </table>
     </div>
   {% else %}
-    <span class="fw-light fs-4">No projects were created yet</span>
+    <div class="text-center"><span class="fw-light fs-4">No projects found</span></div>
   {% endif %}
 {% endblock %}

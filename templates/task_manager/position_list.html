@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">
-    Positions
-  </h1>
+  <h1 class="text-center fw-light">Positions</h1>
 
   {% if position_list %}
     <div class="col-12 col-sm-11 col-lg-10 col-xxl-8 container justify-content-center table-responsive">
@@ -62,6 +60,6 @@
       </table>
     </div>
   {% else %}
-    <span class="fw-light fs-4">There are no positions yet</span>
+    <div class="text-center"><span class="fw-light fs-4">No positions found</span></div>
   {% endif %}
 {% endblock %}

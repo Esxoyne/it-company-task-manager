@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">
-    Team Members
-  </h1>
+  <h1 class="text-center fw-light mb-3">Team Members</h1>
 
   {% if worker_list %}
     <div class="col-xl-11 col-xxl-9 container justify-content-center table-responsive">
@@ -69,6 +67,6 @@
       </table>
     </div>
   {% else %}
-    <span class="fw-light fs-4">There are no members on the team yet</span>
+    <div class="text-center"><span class="fw-light fs-4">No workers found</span></div>
   {% endif %}
 {% endblock %}

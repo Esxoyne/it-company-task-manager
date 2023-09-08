@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">Tasks</h1>
+  <h1 class="text-center fw-light mb-3">Tasks</h1>
 
   {% if task_list %}
     <div class="col-11 container justify-content-center table-responsive">
@@ -173,6 +173,6 @@
       </table>
     </div>
   {% else %}
-    <span class="fw-light fs-4">There are no tasks yet</span>
+    <div class="text-center"><span class="fw-light fs-4">No tasks found</span></div>
   {% endif %}
 {% endblock %}
