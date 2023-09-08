@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block navigation %}
+  {% if object %}
+    {% include "includes/nav_form.html" with no_detail=True %}
+  {% else %}
     {% include "includes/nav_form.html" %}
+  {% endif %}
 {% endblock %}
 
 {% block content %}

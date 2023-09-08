@@ -11,15 +11,6 @@
 {% block content %}
   <h1 class="text-center">Tasks</h1>
 
-  <h3>
-    <a
-      href="{% url "task_manager:task-type-list" %}"
-      class="text-decoration-none text-reset link-body-emphasis"
-    >
-      Task Types
-    </a>
-  </h3>
-
   {% if task_list %}
     <div class="col-11 container justify-content-center table-responsive">
       <table class="table table-striped table-borderless table-hover mt-3 rounded rounded-2 overflow-hidden text-center">

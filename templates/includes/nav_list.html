@@ -6,13 +6,26 @@
         <a href="{% url "task_manager:task-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
+        <a href="{% url "task_manager:task-type-list" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-tag"></i> Types
+        </a>
       {% elif model == "task-type" %}
         <a href="{% url "task_manager:task-type-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-plus-square"></i> Create
+        </a>
+      {% elif model == "position" %}
+        <a href="{% url "task_manager:position-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
       {% elif model == "project" %}
         <a href="{% url "task_manager:project-create" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
+        </a>
+      {% endif %}
+    {% else %}
+      {% if model == "worker" %}
+        <a href="{% url "task_manager:position-list" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-person-badge"></i> Positions
         </a>
       {% endif %}
     {% endif %}
