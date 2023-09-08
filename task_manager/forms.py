@@ -131,14 +131,7 @@ class CustomSearch(Field):
     template = "fields/custom_search.html"
 
 
-class NameSearchHelper(FormHelper):
-    form_method = "GET"
-    layout = Layout(
-        CustomSearch("name"),
-    )
-
-
-class TaskSearchForm(forms.Form):
+class NameSearchForm(forms.Form):
     name = forms.CharField(
         max_length=64,
         required=False,
@@ -150,22 +143,11 @@ class TaskSearchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = NameSearchHelper()
-
-
-class TaskTypeSearchForm(forms.Form):
-    name = forms.CharField(
-        max_length=32,
-        required=False,
-        label="",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Search by name"}
-        ),
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = NameSearchHelper()
+        self.helper = FormHelper()
+        self.helper.form_method = "GET"
+        self.helper.layout = Layout(
+            CustomSearch("name"),
+        )
 
 
 class WorkerSearchForm(forms.Form):
@@ -185,18 +167,3 @@ class WorkerSearchForm(forms.Form):
         self.helper.layout = Layout(
             CustomSearch("username"),
         )
-
-
-class ProjectSearchForm(forms.Form):
-    name = forms.CharField(
-        max_length=64,
-        required=False,
-        label="",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Search by name"}
-        ),
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = NameSearchHelper()
