@@ -1,0 +1,46 @@
+{% load crispy_forms_filters %}
+
+<div class="dropdown">
+  <span
+    class="me-4 font-monospace text-decoration-none link-body-emphasis dropdown-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="bi bi-filter"></i>
+  </span>
+  <ul class="dropdown-menu" style="min-width: 250px;">
+    <li>
+      <div class="container">
+        <div class="text-center"><span class="fs-5">Filter</span></div>
+        <form action="" method="get">
+          {{ filter_form|crispy }}
+          <div class="text-center">
+            {% if request.GET.username %}
+              <input type="hidden" name="username" value={{ request.GET.username }}>
+            {% elif request.GET.name %}
+              <input type="hidden" name="name" value={{ request.GET.name }}>
+            {% endif %}
+            <button class="btn w-100 {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
+              <i class="bi bi-filter"></i> Apply
+            </button>
+            <a
+              href="{{ request.path }}"
+              class="d-xl-none btn w-100 mt-2 btn-link text-decoration-none link-body-emphasis"
+            >
+              <span><i class="bi bi-arrow-clockwise"></i> Reset</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </li>
+  </ul>
+</div>
+{% if request.GET %}
+  <a
+    href="{{ request.path }}"
+    class="d-none d-xl-inline font-monospace text-decoration-none link-body-emphasis"
+  >
+    <i class="bi bi-arrow-clockwise"></i> Reset
+  </a>
+{% endif %}

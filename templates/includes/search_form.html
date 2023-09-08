@@ -1,8 +1,13 @@
 {% load crispy_forms_tags %}
 
-<form action="" method="get" class="d-flex">
+<form action="" method="get" class="d-flex me-4">
   <div class="input-group">
     {% crispy search_form %}
+    {% for param, value in request.GET.items %}
+      {% if not param in "name,username" %}
+        <input type="hidden" name="{{ param }}" value={{ value }}>
+      {% endif %}
+    {% endfor %}
     <button class="btn {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit" id="search-addon">
       <i class="bi bi-search"></i>
     </button>
