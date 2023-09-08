@@ -12,6 +12,8 @@ from .forms import (
     TaskCreateForm,
     TaskUpdateForm,
     TaskRenewForm,
+    TaskFilterForm,
+    WorkerFilterForm,
     WorkerUpdateForm,
     NameSearchForm,
     WorkerSearchForm,
@@ -51,6 +53,14 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
         context["search_form"] = NameSearchForm(initial={
             "name": name,
         })
+
+        project = self.request.GET.get("project", "")
+        task_type = self.request.GET.get("task_type", "")
+        context["filter_form"] = TaskFilterForm(initial={
+            "project": project,
+            "task_type": task_type,
+        })
+
         return context
 
     def get_queryset(self):
@@ -58,12 +68,20 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
             "assignees"
         ).select_related("task_type")
 
-        form = NameSearchForm(self.request.GET)
+        search_form = NameSearchForm(self.request.GET)
+        filter_form = TaskFilterForm(self.request.GET)
 
-        if form.is_valid():
-            return queryset.filter(
-                name__icontains=form.cleaned_data["name"]
+        if search_form.is_valid():
+            queryset = queryset.filter(
+                name__icontains=search_form.cleaned_data["name"]
             )
+
+        if filter_form.is_valid():
+            for field, value in filter_form.cleaned_data.items():
+                if value:
+                    queryset = queryset.filter(**{field: value})
+
+            return queryset
 
         return queryset
 
@@ -315,6 +333,10 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
         context["search_form"] = WorkerSearchForm(initial={
             "username": username,
         })
+        position = self.request.GET.get("position", "")
+        context["filter_form"] = WorkerFilterForm(initial={
+            "position": position,
+        })
         return context
 
     def get_queryset(self):
@@ -322,11 +344,20 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
             "tasks"
         ).select_related("position")
 
-        form = WorkerSearchForm(self.request.GET)
+        search_form = WorkerSearchForm(self.request.GET)
+        filter_form = WorkerFilterForm(self.request.GET)
 
-        if form.is_valid():
-            return queryset.filter(
-                username__icontains=form.cleaned_data["username"]
+        if search_form.is_valid():
+            queryset = queryset.filter(
+                username__icontains=search_form.cleaned_data["username"]
+            )
+
+        if filter_form.is_valid():
+            if not filter_form.cleaned_data["position"]:
+                return queryset
+
+            queryset = queryset.filter(
+                position=filter_form.cleaned_data["position"]
             )
 
         return queryset
