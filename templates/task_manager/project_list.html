@@ -44,20 +44,22 @@
               </a>
             </td>
             <td class="align-middle">
-              {% if project.get_progress == "100" %}
-                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar bg-success" style="width: 100%">Complete</div>
-                </div>
-              {% elif project.get_progress == "0" %}
-                <div class="progress project-progress d-flex justify-content-center align-items-center" role="progressbar" aria-label="Project progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  Not started
-                  <div class="progress-bar bg-secondary" style="width: 0%"></div>
-                </div>
-              {% else %}
-                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="{{ project.get_progress }}" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ project.get_progress }}%"></div>
-                </div>
-              {% endif %}
+              {% with progress=project.get_progress %}
+                {% if progress == "100" %}
+                  <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+                  </div>
+                {% elif progress == "0" %}
+                  <div class="progress project-progress d-flex justify-content-center align-items-center" role="progressbar" aria-label="Project progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    Not started
+                    <div class="progress-bar bg-secondary" style="width: 0%"></div>
+                  </div>
+                {% else %}
+                  <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progress }}%"></div>
+                  </div>
+                {% endif %}
+              {% endwith %}
             </td>
             <td class="fw-bold">{{ project.members.count }}</td>
             <td class="fw-bold">{{ project.tasks.count }}</td>
