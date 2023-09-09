@@ -19,24 +19,13 @@
 
   <div class="container-fluid container-xxl">
     <div class="row">
-      {% include "includes/header.html" %}
-      {% include "includes/sidebar.html" %}
-
-      <div class="main-col main-col-transparent min-vh-100 shadow-lg px-5 d-flex flex-column bg-body col-md-9 offset-md-3 offset-xxl-0 col-xxl-12">
+      <div class="main-col-transparent min-vh-100 shadow-lg px-5 d-flex flex-column bg-body">
         {% block navigation %}
           {% include "includes/nav_default.html" %}
         {% endblock %}
-        <main class="my-3">
+        <main class="my-3 row flex-grow-1 align-items-center">
           {% block content %}{% endblock %}
-
-          {% block pagination %}
-            {% if is_paginated %}
-              {% include "includes/pagination.html" %}
-            {% endif %}
-          {% endblock %}
         </main>
-
-        {% include "includes/logout_modal.html" %}
 
         {% include "includes/footer.html" %}
       </div>
