@@ -5,44 +5,23 @@
       {% if model == "task" %}
         {% include "includes/filter_form.html" %}
         <a href="{% url "task_manager:task-create" %}" class="ms-auto font-monospace text-decoration-none link-body-emphasis">
-          <i class="bi bi-plus-square"></i> Create
+          <i class="bi bi-plus-square"></i> <span class="d-none d-sm-inline">Create</span>
         </a>
-        <a href="{% url "task_manager:task-type-list" %}" class="ms-3 font-monospace text-decoration-none link-body-emphasis">
-          <i class="bi bi-tag"></i> Types
+        <a href="{% url "task_manager:task-type-list" %}" class="ms-4 font-monospace text-decoration-none link-body-emphasis">
+          <i class="bi bi-tag"></i> <span class="d-none d-sm-inline">Types</span>
         </a>
       {% elif model == "task-type" %}
-        {% if request.GET %}
-          <a
-            href="{{ request.path }}"
-            class="font-monospace text-decoration-none link-body-emphasis"
-          >
-            <i class="bi bi-arrow-clockwise"></i> Reset
-          </a>
-        {% endif %}
+        {% include "includes/reset_button.html" %}
         <a href="{% url "task_manager:task-type-create" %}" class="ms-auto font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
       {% elif model == "position" %}
-        {% if request.GET %}
-          <a
-            href="{{ request.path }}"
-            class="font-monospace text-decoration-none link-body-emphasis"
-          >
-            <i class="bi bi-arrow-clockwise"></i> Reset
-          </a>
-        {% endif %}
+        {% include "includes/reset_button.html" %}
         <a href="{% url "task_manager:position-create" %}" class="ms-auto font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
       {% elif model == "project" %}
-        {% if request.GET %}
-          <a
-            href="{{ request.path }}"
-            class="font-monospace text-decoration-none link-body-emphasis"
-          >
-            <i class="bi bi-arrow-clockwise"></i> Reset
-          </a>
-        {% endif %}
+        {% include "includes/reset_button.html" %}
         <a href="{% url "task_manager:project-create" %}" class="ms-auto font-monospace text-decoration-none link-body-emphasis">
           <i class="bi bi-plus-square"></i> Create
         </a>
@@ -51,7 +30,7 @@
       {% if model == "worker" %}
         {% include "includes/filter_form.html" %}
         <a href="{% url "task_manager:position-list" %}" class="ms-auto font-monospace text-decoration-none link-body-emphasis">
-          <i class="bi bi-person-badge"></i> Positions
+          <i class="bi bi-person-badge"></i> <span class="d-none d-sm-inline">Positions</span>
         </a>
       {% endif %}
     {% endif %}

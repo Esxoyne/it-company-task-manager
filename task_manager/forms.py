@@ -23,7 +23,10 @@ class SignUpForm(UserCreationForm):
 class TaskCreateForm(forms.ModelForm):
     deadline = forms.DateField(
         widget=forms.DateInput(
-            attrs={"type": "date"}
+            attrs={
+                "onfocus": "this.showPicker()",
+                "type": "date"
+            }
         )
     )
 

@@ -12,7 +12,7 @@
   <ul class="dropdown-menu" style="min-width: 250px;">
     <li>
       <div class="container">
-        <div class="text-center"><span class="fs-5">Filter</span></div>
+        <div class="text-center mb-1"><span class="fs-5">Filter</span></div>
         <form action="" method="get">
           {{ filter_form|crispy }}
           <div class="text-center">
@@ -36,11 +36,4 @@
     </li>
   </ul>
 </div>
-{% if request.GET %}
-  <a
-    href="{{ request.path }}"
-    class="d-none d-xl-inline font-monospace text-decoration-none link-body-emphasis"
-  >
-    <i class="bi bi-arrow-clockwise"></i> Reset
-  </a>
-{% endif %}
+{% include "includes/reset_button.html" %}

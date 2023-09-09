@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
-<form action="" method="get" class="d-flex me-4">
+<form action="" method="get" class="d-none d-sm-flex d-md-none d-lg-flex me-4">
   <div class="input-group">
     {% crispy search_form %}
     {% for param, value in request.GET.items %}
@@ -13,3 +13,40 @@
     </button>
   </div>
 </form>
+
+<div class="dropdown d-sm-none d-md-flex d-lg-none">
+  <span
+    class="me-4 font-monospace text-decoration-none link-body-emphasis dropdown-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="bi bi-search"></i>
+  </span>
+  <ul class="dropdown-menu" style="min-width: 250px;">
+    <li>
+      <div class="container">
+        <div class="text-center mb-2"><span class="fs-5">Search</span></div>
+        <form action="" method="get">
+          {{ search_form|crispy }}
+          <div class="text-center">
+            {% for param, value in request.GET.items %}
+              {% if not param in "name,username" %}
+                <input type="hidden" name="{{ param }}" value={{ value }}>
+              {% endif %}
+            {% endfor %}
+            <button class="btn w-100 {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
+              <i class="bi bi-filter"></i> Apply
+            </button>
+            <a
+              href="{{ request.path }}"
+              class="d-xl-none btn w-100 mt-2 btn-link text-decoration-none link-body-emphasis"
+            >
+              <span><i class="bi bi-arrow-clockwise"></i> Reset</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </li>
+  </ul>
+</div>
