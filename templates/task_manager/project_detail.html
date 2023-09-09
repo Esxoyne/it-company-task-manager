@@ -34,28 +34,30 @@
     <p class="fs-5"><i class="bi bi-arrow-clockwise"></i> Progress</p>
     <div class="row">
       <div class="col col-md-8 col-lg-6 col-xxl-4">
-        {% if project.get_progress == "100" %}
-          <div class="progress project-progress mb-3" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar bg-success" style="width: 100%">Complete</div>
-          </div>
-        {% elif project.get_progress == "0" %}
-          <div class="progress project-progress mb-3 d-flex justify-content-center align-items-center" role="progressbar" aria-label="Project progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-            Not started
-            <div class="progress-bar bg-secondary" style="width: 0%"></div>
-          </div>
-        {% else %}
-          <div class="progress project-progress mb-3" role="progressbar" aria-label="Project progress" aria-valuenow="{{ project.get_progress }}" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ project.get_progress }}%"></div>
-          </div>
-        {% endif %}
+        {% with progress=project.get_progress %}
+          {% if progress == "100" %}
+            <div class="progress project-progress mb-3" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+            </div>
+          {% elif progress == "0" %}
+            <div class="progress project-progress mb-3 d-flex justify-content-center align-items-center" role="progressbar" aria-label="Project progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              Not started
+              <div class="progress-bar bg-secondary" style="width: 0%"></div>
+            </div>
+          {% else %}
+            <div class="progress project-progress mb-3" role="progressbar" aria-label="Project progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progress }}%"></div>
+            </div>
+          {% endif %}
+        {% endwith %}
       </div>
     </div>
   </div>
 
   <hr>
 
-  <section id="members" class="container-fluid row mt-3">
-    <d class="d-flex justify-content-between">
+  <section id="members" class="container">
+    <div class="d-flex justify-content-between">
       <h2 class="fw-light mb-4">Members</h2>
       {% if user in project.members.all %}
         <span
@@ -82,26 +84,28 @@
           </button>
         </form>
       {% endif %}
-    </d>
-    {% for member in project.members.all %}
-      <div class="col-12 col-sm-6 col-xl-4 col-xxl-3">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title d-flex align-items-center">
-              <i class="bi bi-person fs-3 me-2"></i>
-              <a
-                href="{% url "task_manager:worker-detail" pk=member.id %}"
-                class="text-decoration-none link-body-emphasis stretched-link"
-              >
-                {{ member.username }}
-              </a>
-            </h5>
-            <p class="card-text">{{ member.first_name }} {{ member.last_name }}</p>
-            <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ member.position }}</span>
+    </div>
+    <div class="row">
+      {% for member in project.members.all %}
+        <div class="col-12 col-sm-6 col-xl-4 col-xxl-3">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title d-flex align-items-center">
+                <i class="bi bi-person fs-3 me-2"></i>
+                <a
+                  href="{% url "task_manager:worker-detail" pk=member.id %}"
+                  class="text-decoration-none link-body-emphasis stretched-link"
+                >
+                  {{ member.username }}
+                </a>
+              </h5>
+              <p class="card-text">{{ member.first_name }} {{ member.last_name }}</p>
+              <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ member.position }}</span>
+            </div>
           </div>
         </div>
-      </div>
-    {% empty %}
+      {% empty %}
+    </div>
       <span class="fs-5 fw-light">There are no members in this project</span>
     {% endfor %}
   </section>
@@ -109,7 +113,19 @@
   <hr>
 
   <section id="tasks" class="container">
-    <h2 class="fw-light mb-4">Tasks</h2>
+    <div class="d-flex justify-content-between">
+      <h2 class="fw-light mb-4">Tasks</h2>
+      {% if not project.tasks.all and user in project.members.all %}
+        <span
+          type="button"
+          class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+          data-bs-toggle="modal"
+          data-bs-target="#taskAdd"
+        >
+          <i class="bi bi-plus-circle text-success-emphasis"></i> Create
+        </span>
+      {% endif %}
+    </div>
     {% if project.tasks.all %}
       <div class="row mt-4">
         <div class="col-sm-12 col-md-6">
@@ -264,7 +280,9 @@
         </div>
       </div>
     {% else %}
-      <span class="fw-light fs-4">This project does not have any tasks yet</span>
+      <div class="d-flex justify-content-between">
+        <span class="fw-light fs-4">This project does not have any tasks yet</span>
+      </div>
     {% endif %}
   </section>
 

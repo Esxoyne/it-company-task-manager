@@ -1,5 +1,8 @@
 import datetime
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import models
+from django.db.models.query import QuerySet
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -21,9 +24,11 @@ from .forms import (
 from .models import Worker, Task, TaskType, Position, Project
 
 
-class Index(LoginRequiredMixin, generic.ListView):
-    model = Worker
+class Index(LoginRequiredMixin, generic.DetailView):
     template_name = "task_manager/index.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 def toggle_theme(request, **kwargs):
@@ -286,7 +291,7 @@ class PositionListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Position.objects.all()
+        queryset = Position.objects.prefetch_related("workers")
 
         form = NameSearchForm(self.request.GET)
 
@@ -370,8 +375,8 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
 
         all_tasks = self.object.tasks.prefetch_related(
-            "assignees"
-        ).select_related("task_type")
+            "assignees",
+        ).select_related("task_type", "project")
 
         context["completed_tasks"] = all_tasks.filter(
             is_completed=True,
@@ -431,7 +436,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Project.objects.all()
+        queryset = Project.objects.prefetch_related("members", "tasks")
 
         form = NameSearchForm(self.request.GET)
 
@@ -445,7 +450,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 
 class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
     model = Project
-    queryset = Project.objects.prefetch_related("members__position")
+    queryset = Project.objects.prefetch_related("members__position", "tasks")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
