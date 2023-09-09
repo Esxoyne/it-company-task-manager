@@ -24,12 +24,14 @@
             <button class="btn w-100 {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
               <i class="bi bi-filter"></i> Apply
             </button>
-            <a
-              href="{{ request.path }}"
-              class="d-xl-none btn w-100 mt-2 btn-link text-decoration-none link-body-emphasis"
-            >
-              <span><i class="bi bi-arrow-clockwise"></i> Reset</span>
-            </a>
+            {% if request.GET %}
+              <a
+                href="{{ request.path }}"
+                class="d-xl-none btn w-100 mt-2 btn-link text-decoration-none link-body-emphasis"
+              >
+                <span><i class="bi bi-arrow-clockwise"></i> Reset</span>
+              </a>
+            {% endif %}
           </div>
         </form>
       </div>

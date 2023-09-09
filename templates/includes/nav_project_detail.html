@@ -1,11 +1,6 @@
 <nav class="navbar navbar-expand rounded mt-2">
   <div class="container-fluid justify-content-start">
-    <a
-      href="../"
-      class="font-monospace text-decoration-none link-body-emphasis me-3"
-    >
-      <i class="bi bi-arrow-left"></i> Go back
-    </a>
+    {% include "includes/go_back_button.html" %}
     {% if user.is_staff %}
       <a
         class="ms-auto me-3 font-monospace text-decoration-none link-body-emphasis"
@@ -29,6 +24,6 @@
         Edit project
       </a>
     {% endif %}
-    {% include "includes/nav_links.html" %}
+    <div class="d-none d-md-flex ms-auto">{% include "includes/nav_links.html" %}</div>
   </div>
 </nav>
