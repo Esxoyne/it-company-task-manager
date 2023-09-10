@@ -36,15 +36,15 @@
   <div class="container mt-3 mb-4 fs-5">
     <div class="row">
       <div class="col-4">
-        <p><i class="bi bi-tag"></i> Type</p>
+        <p><i class="bi bi-tag"></i> <span class="d-none d-sm-inline">Type</span></p>
         <p class="fw-light">{{ task.task_type.name }}</p>
       </div>
       <div class="col-4">
-        <p><i class="bi bi-exclamation-diamond"></i> Priority</p>
+        <p><i class="bi bi-exclamation-diamond"></i> <span class="d-none d-sm-inline">Priority</span></p></p>
         <p class="fw-light text-{{ task.priority }}-priority">{{ task.priority|capfirst }}</p>
       </div>
       <div class="col-4">
-        <p><i class="bi bi-clock me-2"></i> Due</p>
+        <p><i class="bi bi-clock me-2"></i> <span class="d-none d-sm-inline">Due</span></p></p>
         <p class="fw-light">{{ task.deadline|date:"M j, Y" }}</p>
       </div>
     </div>
@@ -127,6 +127,18 @@
             {% else %}
               <p class="card-text text-secondary">No description</p>
             {% endif %}
+            {% with progress=task.project.get_progress %}
+              {% if progress == "100" %}
+                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+                </div>
+              {% elif progress == "0" %}
+              {% else %}
+                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progress }}%"></div>
+                </div>
+              {% endif %}
+            {% endwith %}
           </div>
         </div>
       </div>
