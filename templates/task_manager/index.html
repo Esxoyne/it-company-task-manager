@@ -5,5 +5,255 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Home</h1>
+  <div class="row mb-0 mb-lg-3">
+
+    <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+      <div class="card rounded rounded-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-4 text-start">
+              <i class="bi bi-clipboard-check fs-1"></i>
+            </div>
+            <div class="col-8">
+              <p class="d-none d-sm-flex card-title text-muted mb-1">Tasks</p>
+              <span
+                class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}"
+              >
+                {{ completed_task_count }}
+              </span>
+              /
+              <span>{{ user.tasks.count }}</span>
+              <a
+                href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
+                class="stretched-link"
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+      <div class="card rounded rounded-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-4 text-start">
+              {% if overdue_task_count %}
+                <i class="bi bi-calendar-x fs-1"></i>
+              {% else %}
+                <i class="bi bi-calendar-week fs-1"></i>
+              {% endif %}
+            </div>
+            <div class="col-8">
+              {% if overdue_task_count %}
+                <p class="d-none d-sm-flex card-title text-muted mb-1">Overdue</p>
+                <span
+                  class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-danger-emphasis,text-danger" }}"
+                >
+                  {{ overdue_task_count }}
+                </span>
+              {% else %}
+                <p class="d-none d-sm-flex card-title text-muted mb-1">This week</p>
+                <span
+                  class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-primary-emphasis,text-primary" }}"
+                >
+                  {% if tasks_this_week %}
+                    {{ tasks_this_week }}
+                  {% else %}
+                    None
+                  {% endif %}
+                </span>
+              {% endif %}
+              <a
+                href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
+                class="stretched-link"
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+      <div class="card rounded rounded-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-4 text-start">
+              <i class="bi bi-kanban fs-1"></i>
+            </div>
+            <div class="col-8">
+              <p class="d-none d-sm-flex card-title text-muted mb-1">Projects</p>
+              <span
+                class="fs-4 fw-bold text-dark-emphasis"
+              >
+                {{ user.projects.count }}
+              </span>
+              <a
+                href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
+                class="stretched-link"
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+      <div class="card rounded rounded-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-4 text-start">
+              <i class="bi bi-people fs-1"></i>
+            </div>
+            <div class="col-8">
+              <p class="d-none d-sm-flex card-title text-muted mb-1">Team</p>
+              <span
+                class="fs-4 fw-bold text-dark-emphasis"
+              >
+                {{ team_members_count }}
+              </span>
+              <span class="d-none d-sm-inline d-lg-none d-xxl-inline text-muted">members</span>
+              <a
+                href="{% url "task_manager:worker-list" %}"
+                class="stretched-link"
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+      {% if projects %}
+        <div class="card">
+          <div class="card-header">
+            <span>Your next task</span>
+          </div>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-3 text-start">
+                {% if next_task.is_overdue %}
+                  <i class="bi bi-clipboard-x-fill fs-1"></i>
+                {% else %}
+                  <i class="bi bi-clipboard-check-fill fs-1"></i>
+                {% endif %}
+              </div>
+              <div class="col-9">
+                <a
+                  href="{% url "task_manager:task-detail" pk=next_task.id %}"
+                  class="fs-5 text-decoration-none link-body-emphasis card-title stretched-link"
+                >
+                  {{ next_task.name|truncatechars:24 }}
+                </a>
+                <p class="d-none d-sm-flex text-muted mb-1">
+                  {% if next_task.description %}
+                    <span class="fw-light">{{ next_task.description|truncatechars:48 }}</span>
+                  {% else %}
+                    <span class="fw-light text-secondary">No description</span>
+                  {% endif %}
+                </p>
+                <div class="row align-items-center">
+                  <div class="col-6">
+                    <span><i class="bi bi-clock fs-4 text-muted"></i></span>
+                    <span class="ms-1 text-secondary-emphasis">{{ next_task.deadline|date:"M j" }}</span>
+                  </div>
+                  <div class="col-6">
+                    <span><i class="bi bi-exclamation-diamond fs-4 text-muted"></i></span>
+                    <span class="ms-1 text-{{ next_task.priority }}-priority">{{ next_task.priority|capfirst }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% if next_task.is_completed %}
+            <div class="progress rounded-1 rounded-top-0 project-progress">
+              <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+            </div>
+            {% elif next_task.is_overdue %}
+            <div class="progress rounded-1 rounded-top-0 project-progress">
+              <div class="progress-bar progress-bar-striped task-bar-overdue" style="width: 100%">Overdue</div>
+            </div>
+            {% elif next_task.is_at_risk %}
+              <div class="progress rounded-1 rounded-top-0 project-progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated task-bar-at-risk" style="width: 100%">At Risk</div>
+              </div>
+            {% else %}
+              <div class="progress rounded-1 rounded-top-0 project-progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">In progress</div>
+              </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+      {% if projects %}
+        <div class="card">
+          <div class="card-header">
+            <span>Your latest project</span>
+          </div>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-3 text-start">
+                <i class="bi bi-kanban-fill fs-1"></i>
+              </div>
+              <div class="col-9">
+                <a
+                  href="{% url "task_manager:project-detail" pk=latest_project.id %}"
+                  class="fs-5 text-decoration-none link-body-emphasis card-title stretched-link"
+                >
+                  {{ latest_project.name|truncatechars:24 }}
+                </a>
+                <p class="d-none d-sm-flex text-muted mb-1">
+                  {% if latest_project.description %}
+                    <span class="fw-light">{{ latest_project.description|truncatechars:200 }}</span>
+                  {% else %}
+                    <span class="fw-light text-secondary">No description</span>
+                  {% endif %}
+                </p>
+                <div class="row align-items-center">
+                  <div class="col-6">
+                    <span><i class="bi bi-clipboard-check fs-4 text-muted"></i></span>
+                    <span
+                      class="ms-1 fs-4 fw-bold {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}"
+                    >
+                      {{ latest_project_completed_tasks_count }}
+                    </span>
+                    /
+                    <span>{{ latest_project.tasks.count }}</span>
+                    <span class="ms-1 d-none d-sm-inline d-lg-none d-xl-inline text-muted">tasks</span>
+                  </div>
+                  <div class="col-6">
+                    <span><i class="bi bi-people fs-4 text-muted"></i></span>
+                    <span class="ms-1 fs-4 fw-bold text-secondary-emphasis">{{ latest_project.members.count }}</span>
+                    <span class="ms-1 d-none d-sm-inline d-lg-none d-xl-inline text-muted">members</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% with progress=latest_project.get_progress %}
+            {% if progress == "100" %}
+              <div class="progress rounded-1 rounded-top-0 project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+              </div>
+            {% elif progress == "0" %}
+              <div class="progress rounded-1 rounded-top-0 project-progress d-flex justify-content-center align-items-center" role="progressbar" aria-label="Project progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                Not started
+                <div class="progress-bar bg-secondary" style="width: 0%"></div>
+              </div>
+            {% else %}
+              <div class="progress rounded-1 rounded-top-0 project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progress }}%"></div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
 {% endblock %}

@@ -30,6 +30,35 @@ class Index(LoginRequiredMixin, generic.DetailView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        projects = self.object.projects.all()
+        next_task = self.object.tasks.latest("-deadline")
+        latest_project = projects.last()
+
+        context["next_task"] = next_task
+
+        context["completed_task_count"] = self.object.tasks.filter(is_completed=True).count()
+        context["overdue_task_count"] = len(
+            [task for task in self.object.tasks.all() if task.is_overdue]
+        )
+
+        current_week = datetime.date.today().isocalendar()[1]
+        context["tasks_this_week"] = self.object.tasks.filter(
+            deadline__week=current_week
+        ).count()
+
+        context["projects"] = projects
+        context["latest_project"] = latest_project
+        context["latest_project_completed_tasks_count"] = (
+            latest_project.tasks.filter(is_completed=True).count()
+        )
+
+        context["team_members_count"] = Worker.objects.count()
+
+        return context
+
 
 def toggle_theme(request, **kwargs):
     if "is_dark_mode" in request.session:
@@ -164,14 +193,15 @@ class TaskToggleCompleteView(
     def post(self, request, *args, **kwargs):
         task = get_object_or_404(Task, pk=kwargs["pk"])
 
-        if task.is_completed and task.deadline <= datetime.date.today():
-            task.deadline = datetime.date.today() + datetime.timedelta(days=1)
+        if task.is_completed and task.deadline < datetime.date.today():
+            task.deadline = datetime.date.today()
 
         task.is_completed = not task.is_completed
         task.save()
 
         referer = self.request.POST.get("referer")
         urls = {
+            "home": reverse_lazy("task_manager:home"),
             "worker-detail": self.request.user.get_absolute_url() + "#tasks",
             "task-detail": task.get_absolute_url(),
             "project-detail": task.project.get_absolute_url() + "#tasks"
@@ -210,13 +240,14 @@ class TaskToggleAssignView(
         else:
             task.assignees.add(user)
 
-        referer = self.request.POST.get("referer", "other")
+        referer = self.request.POST.get("referer")
         urls = {
-            "other" : task.get_absolute_url(),
             "project-detail": task.project.get_absolute_url() + "#tasks"
         }
 
-        return redirect(urls[referer])
+        return redirect(
+            urls.get(referer, task.get_absolute_url())
+        )
 
     def test_func(self):
         task = get_object_or_404(Task, pk=self.kwargs["pk"])

@@ -117,3 +117,14 @@
   color: var(--bs-body-bg);
   background-color: var(--bs-body-color);
 }
+
+.task-bar-at-risk {
+  background-color: rgb(255, 190, 93);
+  /* background-color: rgb(240, 205, 97); */
+  color: var(--bs-dark);
+}
+
+.task-bar-overdue {
+  background-color: rgb(255, 91, 91);
+  color: var(--bs-light);
+}
