@@ -24,8 +24,8 @@ class TaskCreateForm(forms.ModelForm):
     deadline = forms.DateField(
         widget=forms.DateInput(
             attrs={
+                "type": "date",
                 "onfocus": "this.showPicker()",
-                "type": "date"
             }
         )
     )
@@ -58,7 +58,10 @@ class TaskUpdateForm(forms.ModelForm):
     )
     deadline = forms.DateField(
         widget=forms.DateInput(
-            attrs={"type": "date"}
+            attrs={
+                "type": "date",
+                "onfocus": "this.showPicker()",
+            }
         )
     )
 
@@ -73,6 +76,9 @@ class TaskUpdateForm(forms.ModelForm):
             "assignees",
         )
 
+    def clean_deadline(self):
+        return validate_deadline(self.cleaned_data["deadline"])
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["assignees"].queryset = self.instance.project.members.all()
@@ -81,7 +87,10 @@ class TaskUpdateForm(forms.ModelForm):
 class TaskRenewForm(forms.ModelForm):
     deadline = forms.DateField(
         widget=forms.DateInput(
-            attrs={"type": "date"}
+            attrs={
+                "type": "date",
+                "onfocus": "this.showPicker()",
+            }
         )
     )
 
@@ -94,7 +103,7 @@ class TaskRenewForm(forms.ModelForm):
 
 
 def validate_deadline(deadline):
-    if deadline <= datetime.date.today():
+    if deadline < datetime.date.today():
         raise ValidationError("Invalid date - deadline set in past")
 
     return deadline

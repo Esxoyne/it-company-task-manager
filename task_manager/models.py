@@ -21,12 +21,12 @@ class Project(models.Model):
 
     @property
     def progress(self) -> float:
-        total = self.tasks.count()
+        total = self.tasks.all()
         if not total:
             return "0"
 
-        completed = self.tasks.filter(is_completed=True).count()
-        return completed / total
+        completed = total.filter(is_completed=True).count()
+        return completed / len(total)
 
     def get_progress(self) -> str:
         return str(int(self.progress * 100))
@@ -116,10 +116,10 @@ class Task(models.Model):
     def is_at_risk(self) -> bool:
         return (
             datetime.date.today()
-            < self.deadline
-            <= datetime.date.today() + datetime.timedelta(days=2)
+            <= self.deadline
+            <= datetime.date.today() + datetime.timedelta(days=1)
         )
 
     @property
     def is_overdue(self) -> bool:
-        return self.deadline <= datetime.date.today() and not self.is_completed
+        return self.deadline < datetime.date.today() and not self.is_completed
