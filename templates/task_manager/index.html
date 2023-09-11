@@ -16,13 +16,21 @@
             </div>
             <div class="col-8">
               <p class="d-none d-sm-flex card-title text-muted mb-1">Tasks</p>
-              <span
-                class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}"
-              >
-                {{ completed_task_count }}
-              </span>
-              /
-              <span>{{ user.tasks.count }}</span>
+              {% if tasks %}
+                <span
+                  class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}"
+                >
+                  {{ completed_task_count }}
+                </span>
+                /
+                <span>{{ tasks.count }}</span>
+              {% else %}
+                <span
+                  class="fs-4 fw-bold {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}"
+                >
+                  None
+                </span>
+              {% endif %}
               <a
                 href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
                 class="stretched-link"
@@ -86,7 +94,11 @@
               <span
                 class="fs-4 fw-bold text-dark-emphasis"
               >
-                {{ user.projects.count }}
+                {% if project_count %}
+                  {{ project_count }}
+                {% else %}
+                  None
+                {% endif %}
               </span>
               <a
                 href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
@@ -127,7 +139,7 @@
   <div class="row">
 
     <div class="col-12 col-lg-6 mb-3 mb-lg-0">
-      {% if projects %}
+      {% if next_task %}
         <div class="card">
           <div class="card-header">
             <span>Your next task</span>

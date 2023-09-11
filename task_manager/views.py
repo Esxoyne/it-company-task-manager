@@ -1,8 +1,5 @@
 import datetime
-from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db import models
-from django.db.models.query import QuerySet
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -33,27 +30,43 @@ class Index(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        tasks = self.object.tasks.all()
         projects = self.object.projects.all()
-        next_task = self.object.tasks.latest("-deadline")
+
+        if tasks:
+            if tasks.filter(is_completed=False):
+                next_task = tasks.filter(
+                    is_completed=False
+                ).latest("-deadline")
+            else:
+                next_task = tasks.latest("deadline")
+        else:
+            next_task = None
+
         latest_project = projects.last()
 
+        context["tasks"] = tasks
         context["next_task"] = next_task
-
-        context["completed_task_count"] = self.object.tasks.filter(is_completed=True).count()
+        context["completed_task_count"] = tasks.filter(
+            is_completed=True
+        ).count()
         context["overdue_task_count"] = len(
-            [task for task in self.object.tasks.all() if task.is_overdue]
+            [task for task in tasks if task.is_overdue]
         )
 
         current_week = datetime.date.today().isocalendar()[1]
-        context["tasks_this_week"] = self.object.tasks.filter(
+        context["tasks_this_week"] = tasks.filter(
             deadline__week=current_week
         ).count()
 
         context["projects"] = projects
-        context["latest_project"] = latest_project
-        context["latest_project_completed_tasks_count"] = (
-            latest_project.tasks.filter(is_completed=True).count()
-        )
+        context["project_count"] = projects.count()
+
+        if latest_project:
+            context["latest_project"] = latest_project
+            context["latest_project_completed_tasks_count"] = (
+                latest_project.tasks.filter(is_completed=True).count()
+            )
 
         context["team_members_count"] = Worker.objects.count()
 
