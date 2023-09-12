@@ -234,6 +234,11 @@ class PrivatePositionTest(TestCase):
         self.assertTrue(response.context["is_paginated"] is True)
         self.assertEqual(len(response.context["position_list"]), 4)
 
+    def test_update_position(self):
+        response = self.client.get("/positions/1/update/")
+
+        self.assertEqual(response.status_code, 403)
+
     def test_search_form_exists(self):
         response = self.client.get(POSITION_LIST_URL)
 

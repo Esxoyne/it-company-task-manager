@@ -361,10 +361,17 @@ class PositionCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("task_manager:position-list")
 
 
-class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
+class PositionUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    generic.UpdateView,
+):
     model = Position
     fields = ("name",)
     success_url = reverse_lazy("task_manager:position-list")
+
+    def test_func(self):
+        return self.request.user.is_staff
 
 
 class PositionDeleteView(
