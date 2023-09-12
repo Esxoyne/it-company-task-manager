@@ -23,11 +23,11 @@
     </svg>
     <h2 class="ms-4 me-auto pe-3">{{ task.name }}</h2>
     {% if task.is_completed %}
-      <h4 class="font-monospace text-success-emphasis">Done</h4>
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}">Done</h4>
     {% elif task.is_overdue %}
-      <h4 class="font-monospace text-danger-emphasis">Overdue</h4>
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-danger-emphasis,text-danger" }}">Overdue</h4>
     {% elif task.is_at_risk %}
-      <h4 class="font-monospace text-warning-emphasis">At Risk</h4>
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-warning-emphasis,text-warning" }}">At Risk</h4>
     {% else %}
       <h4 class="font-monospace">In progress</h4>
     {% endif %}

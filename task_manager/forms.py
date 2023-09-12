@@ -40,6 +40,9 @@ class TaskCreateForm(forms.ModelForm):
             "priority",
             "deadline",
         )
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 5})
+        }
 
     def clean_deadline(self):
         return validate_deadline(self.cleaned_data["deadline"])
@@ -76,6 +79,9 @@ class TaskUpdateForm(forms.ModelForm):
             "deadline",
             "assignees",
         )
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 5})
+        }
 
     def clean_deadline(self):
         return validate_deadline(self.cleaned_data["deadline"])
@@ -124,6 +130,9 @@ class ProjectForm(forms.ModelForm):
             "description",
             "members",
         )
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 5})
+        }
 
 
 class ProjectTaskAddForm(TaskCreateForm):
