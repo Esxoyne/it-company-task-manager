@@ -26,7 +26,7 @@ class Project(models.Model):
     def progress(self) -> int | float:
         total = self.tasks.all()
         if not total:
-            return "0"
+            return 0
 
         completed = total.filter(is_completed=True).count()
         return completed / len(total)
