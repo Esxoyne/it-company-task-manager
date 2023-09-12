@@ -46,7 +46,9 @@ class Index(LoginRequiredMixin, generic.DetailView):
         latest_project = projects.last()
 
         context["tasks"] = tasks
-        context["next_task"] = next_task
+        if next_task:
+            context["next_task"] = next_task
+
         context["completed_task_count"] = tasks.filter(
             is_completed=True
         ).count()
@@ -54,9 +56,10 @@ class Index(LoginRequiredMixin, generic.DetailView):
             [task for task in tasks if task.is_overdue]
         )
 
+        uncompleted_tasks = tasks.filter(is_completed=False)
         current_week = datetime.date.today().isocalendar()[1]
-        context["tasks_this_week"] = tasks.filter(
-            deadline__week=current_week
+        context["tasks_this_week"] = uncompleted_tasks.filter(
+            deadline__week=current_week,
         ).count()
 
         context["projects"] = projects

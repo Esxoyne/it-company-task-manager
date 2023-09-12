@@ -6,6 +6,7 @@ from django.urls import reverse
 from task_manager.models import Position, Project, Task, TaskType
 
 
+INDEX_URL = reverse("task_manager:home")
 POSITION_LIST_URL = reverse("task_manager:position-list")
 PROJECT_LIST_URL = reverse("task_manager:project-list")
 PROJECT_DETAIL_URL = reverse("task_manager:project-detail", kwargs={"pk": 1})
@@ -14,6 +15,163 @@ TASK_LIST_URL = reverse("task_manager:task-list")
 TASK_DETAIL_URL = reverse("task_manager:task-detail", kwargs={"pk": 1})
 WORKER_LIST_URL = reverse("task_manager:worker-list")
 WORKER_DETAIL_URL = reverse("task_manager:worker-detail", kwargs={"pk": 1})
+
+
+class PublicIndexTest(TestCase):
+    def test_index_login_required(self):
+        response = self.client.get(INDEX_URL)
+
+        self.assertNotEqual(response.status_code, 200)
+        self.assertRedirects(
+            response, reverse("login") + "?next=/"
+        )
+
+
+class PrivateIndexTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        number_of_projects = 4
+        number_of_tasks = 8
+        task_type = TaskType.objects.create(
+            name="Bug fix"
+        )
+
+        for project_id in range(number_of_projects - 1):
+            Project.objects.create(
+                name=f"Project {project_id}"
+            )
+
+        for task_id in range(number_of_tasks):
+            Task.objects.create(
+                name=f"Task {task_id}",
+                project=Project.objects.get(pk=1),
+                deadline=datetime.date.today() + datetime.timedelta(days=7),
+                task_type=task_type,
+                priority="medium",
+            )
+
+        Position.objects.create(
+            name="Data Analyst",
+        )
+        Project.objects.create(
+            name="Website Project",
+        )
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="alice",
+            password="user12345",
+            position=Position.objects.get(pk=1),
+        )
+        project = Project.objects.get(name="Website Project")
+        project.members.add(self.user)
+        project.save()
+        task = Task.objects.create(
+            name="User Task",
+            project=project,
+            deadline=datetime.date.today(),
+            task_type=TaskType.objects.get(pk=1),
+            priority="medium",
+        )
+        task.assignees.add(self.user)
+        task.save()
+        self.client.force_login(self.user)
+
+    def test_index_page_object(self):
+        response = self.client.get("/")
+        self.assertTrue("user" in response.context)
+
+    def test_index_page_context_querysets(self):
+        response = self.client.get("/")
+
+        self.assertTrue("tasks" in response.context)
+        self.assertEqual(len(response.context["tasks"]), 1)
+
+        self.assertTrue("next_task" in response.context)
+        self.assertEqual(response.context["next_task"].name, "User Task")
+
+        self.assertTrue("projects" in response.context)
+        self.assertEqual(len(response.context["projects"]), 1)
+
+        self.assertTrue("latest_project" in response.context)
+        self.assertEqual(response.context["latest_project"].name, "Website Project")
+
+    def test_index_page_context_querysets_none(self):
+        user = get_user_model().objects.get(pk=1)
+        user.tasks.clear()
+        user.projects.clear()
+        response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(response.context["tasks"]), 0)
+        self.assertFalse("next_task" in response.context)
+        self.assertEqual(len(response.context["projects"]), 0)
+        self.assertFalse("latest_project" in response.context)
+
+    def test_index_page_context_counts(self):
+        task = Task.objects.get(name="User Task")
+
+        response = self.client.get("/")
+
+        self.assertTrue("tasks_this_week" in response.context)
+        self.assertEqual(response.context["tasks_this_week"], 1)
+
+        task.is_completed = True
+        task.save()
+
+        response = self.client.get("/")
+
+        self.assertTrue("completed_task_count" in response.context)
+        self.assertEqual(response.context["completed_task_count"], 1)
+
+        self.assertTrue("tasks_this_week" in response.context)
+        self.assertEqual(response.context["tasks_this_week"], 0)
+
+        self.assertTrue("project_count" in response.context)
+        self.assertEqual(response.context["project_count"], 1)
+
+        self.assertTrue(
+            "latest_project_completed_tasks_count" in response.context
+        )
+        self.assertEqual(
+            response.context["latest_project_completed_tasks_count"], 1
+        )
+
+        self.assertTrue("team_members_count" in response.context)
+        self.assertEqual(response.context["team_members_count"], 1)
+
+        task.is_completed = False
+        task.deadline = datetime.date.today() - datetime.timedelta(days=8)
+        task.save()
+
+        response = self.client.get("/")
+
+        self.assertTrue("overdue_task_count" in response.context)
+        self.assertEqual(response.context["overdue_task_count"], 1)
+
+    def test_index_page_context_counts_none(self):
+        user = get_user_model().objects.get(pk=1)
+        user.tasks.clear()
+        user.projects.clear()
+
+        response = self.client.get("/")
+
+        self.assertTrue("completed_task_count" in response.context)
+        self.assertEqual(response.context["completed_task_count"], 0)
+
+        self.assertTrue("overdue_task_count" in response.context)
+        self.assertEqual(response.context["overdue_task_count"], 0)
+
+        self.assertTrue("tasks_this_week" in response.context)
+        self.assertEqual(response.context["tasks_this_week"], 0)
+
+        self.assertTrue("project_count" in response.context)
+        self.assertEqual(response.context["project_count"], 0)
+
+        self.assertFalse(
+            "latest_project_completed_tasks_count" in response.context
+        )
 
 
 class PublicPositionTest(TestCase):
@@ -178,6 +336,20 @@ class PrivateProjectTest(TestCase):
 
         self.assertTrue(user in new_project.members.all())
 
+    def test_update_project(self):
+        response = self.client.get("/projects/1/update/")
+
+        self.assertEqual(response.status_code, 403)
+
+        user = get_user_model().objects.get(username="alice")
+        project = Project.objects.get(pk=1)
+        project.members.add(user)
+        project.save()
+
+        response = self.client.get("/projects/1/update/")
+
+        self.assertEqual(response.status_code, 200)
+
     def test_delete_project(self):
         response = self.client.get("/projects/1/delete/")
 
@@ -191,6 +363,22 @@ class PrivateProjectTest(TestCase):
         response = self.client.get("/projects/1/delete/")
 
         self.assertEqual(response.status_code, 200)
+
+    def test_toggle_project_membership(self):
+        user = get_user_model().objects.get(username="alice")
+        project = Project.objects.get(pk=1)
+
+        self.assertFalse(user in project.members.all())
+
+        response = self.client.post("/projects/1/toggle-join/")
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertRedirects(
+            response, "/projects/1/"
+        )
+
+        self.assertTrue(user in project.members.all())
 
     def test_detail_url_exists_at_desired_location(self):
         response = self.client.get("/projects/1/")
@@ -424,6 +612,20 @@ class PrivateTaskTest(TestCase):
         new_task.save()
         self.assertTrue(user in new_task.assignees.all())
 
+    def test_update_task(self):
+        response = self.client.get("/tasks/1/update/")
+
+        self.assertEqual(response.status_code, 403)
+
+        user = get_user_model().objects.get(username="alice")
+        task = Task.objects.get(pk=1)
+        task.assignees.add(user)
+        task.save()
+
+        response = self.client.get("/tasks/1/update/")
+
+        self.assertEqual(response.status_code, 200)
+
     def test_delete_task(self):
         response = self.client.get("/tasks/1/delete/")
 
@@ -437,6 +639,47 @@ class PrivateTaskTest(TestCase):
         response = self.client.get("/tasks/1/delete/")
 
         self.assertEqual(response.status_code, 200)
+
+    def test_toggle_task_assign(self):
+        user = get_user_model().objects.get(username="alice")
+        task = Task.objects.get(pk=1)
+        project = Project.objects.get(pk=1)
+        project.members.add(user)
+        project.save()
+
+        self.assertFalse(user in task.assignees.all())
+
+        response = self.client.post("/tasks/1/toggle-assign/")
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertRedirects(
+            response, "/tasks/1/"
+        )
+
+        self.assertTrue(user in task.assignees.all())
+
+    def test_toggle_task_completion(self):
+        user = get_user_model().objects.get(username="alice")
+        task = Task.objects.get(pk=1)
+        task.assignees.add(user)
+        task.save()
+        project = Project.objects.get(pk=1)
+        project.members.add(user)
+        project.save()
+
+        self.assertFalse(task.is_completed)
+
+        response = self.client.post("/tasks/1/toggle-complete/")
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertRedirects(
+            response, "/tasks/"
+        )
+
+        task.refresh_from_db()
+        self.assertTrue(task.is_completed)
 
     def test_detail_url_exists_at_desired_location(self):
         response = self.client.get("/tasks/1/")
@@ -494,6 +737,7 @@ class PrivateTaskTest(TestCase):
         self.assertEqual(
             response.context["filter_form"].initial["task_type"], "1"
         )
+
 
 class PublicWorkerTest(TestCase):
     def test_worker_list_login_required(self):
@@ -602,6 +846,19 @@ class PrivateWorkerTest(TestCase):
         self.assertTrue("is_paginated" in response.context)
         self.assertTrue(response.context["is_paginated"] is True)
         self.assertEqual(len(response.context["worker_list"]), 3)
+
+    def test_update_worker(self):
+        response = self.client.get("/team/1/update/")
+
+        self.assertEqual(response.status_code, 403)
+
+        user = get_user_model().objects.get(username="alice")
+
+        response = self.client.get(
+            reverse("task_manager:worker-update", kwargs={"pk": user.pk})
+        )
+
+        self.assertEqual(response.status_code, 200)
 
     def test_delete_worker(self):
         response = self.client.get("/team/1/delete/")
