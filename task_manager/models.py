@@ -23,7 +23,7 @@ class Project(models.Model):
         return reverse("task_manager:project-detail", kwargs={"pk": self.pk})
 
     @property
-    def progress(self) -> float:
+    def progress(self) -> int | float:
         total = self.tasks.all()
         if not total:
             return "0"

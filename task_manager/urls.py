@@ -123,7 +123,7 @@ urlpatterns = [
         views.WorkerDeleteView.as_view(),
         name="worker-delete",
     ),
-    path("toggle-theme/", views.toggle_theme, name="toggle-theme"),
+    path("toggle-theme/", views.ToggleTheme.as_view(), name="toggle-theme"),
     path("sign-up/", views.SignUpView.as_view(), name="sign-up"),
 ]
 
