@@ -40,7 +40,6 @@ class ProjectModelTest(TestCase):
 
         Task.objects.filter(id__range=(1, 4)).update(is_completed=True)
 
-
     def test_project_str(self):
         project = Project.objects.get(pk=1)
 
@@ -82,14 +81,14 @@ class TaskModelTest(TestCase):
         )
 
         task.pk = None
-        task.deadline=(
+        task.deadline = (
             datetime.date.today()
             + datetime.timedelta(days=1)
         )
         task.save()
 
         task.pk = None
-        task.deadline=(
+        task.deadline = (
             datetime.date.today()
             - datetime.timedelta(days=1)
         )

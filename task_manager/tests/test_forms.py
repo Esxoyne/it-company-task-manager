@@ -24,7 +24,9 @@ class TaskCreateFormTest(TestCase):
     def test_task_create_form_deadline_field_widget(self):
         form = TaskCreateForm()
 
-        self.assertTrue(isinstance(form.fields["deadline"].widget, forms.DateInput))
+        self.assertTrue(
+            isinstance(form.fields["deadline"].widget, forms.DateInput)
+        )
 
     def test_task_create_form_date_in_past(self):
         date = datetime.date.today() - datetime.timedelta(days=1)
@@ -75,12 +77,15 @@ class TaskUpdateFormTest(TestCase):
         task = Task.objects.get(pk=1)
         form = TaskUpdateForm(instance=task)
 
-        self.assertTrue(isinstance(form.fields["assignees"].widget, forms.CheckboxSelectMultiple))
+        self.assertTrue(
+            isinstance(
+                form.fields["assignees"].widget, forms.CheckboxSelectMultiple
+            )
+        )
 
     def test_task_update_form_assignees_field_queryset(self):
         task = Task.objects.get(pk=1)
         form = TaskUpdateForm(instance=task)
-        project_members = Project.objects.get(pk=1).members.all()
 
         self.assertEqual(
             len(form.fields["assignees"].queryset), 1
@@ -90,7 +95,9 @@ class TaskUpdateFormTest(TestCase):
         task = Task.objects.get(pk=1)
         form = TaskUpdateForm(instance=task)
 
-        self.assertTrue(isinstance(form.fields["deadline"].widget, forms.DateInput))
+        self.assertTrue(
+            isinstance(form.fields["deadline"].widget, forms.DateInput)
+        )
 
     def test_task_update_form_date_in_past(self):
         task = Task.objects.get(pk=1)

@@ -94,7 +94,9 @@ class PrivateIndexTest(TestCase):
         self.assertEqual(len(response.context["projects"]), 1)
 
         self.assertTrue("latest_project" in response.context)
-        self.assertEqual(response.context["latest_project"].name, "Website Project")
+        self.assertEqual(
+            response.context["latest_project"].name, "Website Project"
+        )
 
     def test_index_page_context_querysets_none(self):
         user = get_user_model().objects.get(pk=1)
@@ -331,7 +333,9 @@ class PrivateProjectTest(TestCase):
             "name": "Website Project",
             "members": user.pk,
         }
-        self.client.post(reverse("task_manager:project-create"), data=form_data)
+        self.client.post(
+            reverse("task_manager:project-create"), data=form_data
+        )
         new_project = Project.objects.get(name=form_data["name"])
 
         self.assertTrue(user in new_project.members.all())
