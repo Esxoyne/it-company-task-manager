@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand rounded mt-2">
   <div class="container-fluid justify-content-start">
     {% include "includes/go_back_button.html" %}
-    {% if user.is_staff %}
+    {% if user in task.assignees.all %}
       {% if not task.is_overdue %}
         <form
           action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
@@ -49,40 +49,6 @@
       >
         Delete
       </span>
-    {% elif task.is_overdue and task in user.tasks.all %}
-      <a
-        href="{% url "task_manager:task-renew" pk=task.id %}"
-        class="ms-auto font-monospace text-decoration-none link-body-emphasis me-3"
-      >
-        Renew
-      </a>
-      <a class="font-monospace text-decoration-none link-body-emphasis" href="{% url "task_manager:task-update" pk=task.id %}">Edit task</a>
-    {% elif task in user.tasks.all %}
-      <form
-        action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
-        class="ms-auto d-inline"
-        method="post"
-        novalidate
-      >
-        {% csrf_token %}
-        {% if task.is_completed %}
-          <button
-            type="submit"
-            class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
-          >
-            Undo
-          </button>
-        {% else %}
-          <button
-            type="submit"
-            class="btn btn-link font-monospace link-success text-decoration-none"
-          >
-            Complete
-          </button>
-        {% endif %}
-        <input type="hidden" name="referer" value="task-detail">
-      </form>
-      <a class="font-monospace text-decoration-none link-body-emphasis" href="{% url "task_manager:task-update" pk=task.id %}">Edit task</a>
     {% endif %}
     <div class="d-none d-md-flex ms-auto">{% include "includes/nav_links.html" %}</div>
   </div>

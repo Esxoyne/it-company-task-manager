@@ -45,9 +45,10 @@ class TaskCreateForm(forms.ModelForm):
         return validate_deadline(self.cleaned_data["deadline"])
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
+        self.request = kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
-        self.fields["project"].queryset = self.request.user.projects.all()
+        if self.request:
+            self.fields["project"].queryset = self.request.user.projects.all()
 
 
 class TaskUpdateForm(forms.ModelForm):

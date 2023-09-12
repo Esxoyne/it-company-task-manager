@@ -145,7 +145,7 @@
     </div>
   </section>
 
-  {% if user.is_staff %}
+  {% if user in task.assignees.all %}
     {% include "includes/task_delete_modal.html" %}
   {% endif %}
 {% endblock %}

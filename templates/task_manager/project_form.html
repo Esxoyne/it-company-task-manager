@@ -31,7 +31,6 @@
               Cancel
             </a>
             {% if not object %}
-              <input type="hidden" name="creator" value="{{ user.id }}">
               <input type="hidden" name="members" value="{{ user.id }}">
             {% endif %}
             <button type="submit" class="btn {{ is_dark_mode|yesno:"btn-light,btn-dark"}}">

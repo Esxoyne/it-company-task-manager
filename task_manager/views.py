@@ -175,7 +175,12 @@ class TaskDeleteView(
     success_url = reverse_lazy("task_manager:task-list")
 
     def test_func(self):
-        return self.request.user.is_staff
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+
+        return (
+            self.request.user.is_staff
+            or self.request.user in task.assignees.all()
+        )
 
 
 class TaskRenewView(
@@ -548,7 +553,12 @@ class ProjectDeleteView(
     success_url = reverse_lazy("task_manager:project-list")
 
     def test_func(self):
-        return self.request.user.is_staff
+        project = get_object_or_404(Project, pk=self.kwargs["pk"])
+
+        return (
+            self.request.user.is_staff
+            or self.request.user in project.members.all()
+        )
 
 
 class ProjectToggleJoinView(LoginRequiredMixin, generic.View):
