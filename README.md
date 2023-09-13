@@ -8,14 +8,14 @@ Built using `Django` & `Bootstrap 5`
 
 1. **Authentication system**: create a new account and login using username and password
 
-2.  You can **update your personal information** on your profile page
+2.  You can **update your personal information** in your profile page
 
 3. **Manage projects and tasks** using web interface
 
 - Join or create projects, add team members
 - Create tasks for projects, assign them to other members of the project
-- Track task progress in your profile page, project page or in the task list
-- Search and filter tasks in the paginated task list
+- Track task progress on your profile page, project page or in the task list
+- Search and filter tasks on the task list page
 
 4. Or use the **admin panel** for advanced management
 
