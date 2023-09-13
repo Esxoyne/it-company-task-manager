@@ -1,0 +1,21 @@
+<div class="modal fade" id="logout" tabindex="-1" aria-labelledby="logout" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-center fw-light fs-3">
+        Are you sure you want to sign out?
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button
+          type="button"
+          class="btn {{ is_dark_mode|yesno:"btn-outline-light,btn-outline-dark" }}"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <a href="{% url "logout" %}" class="btn {{ is_dark_mode|yesno:"btn-light,btn-dark" }}">
+          <i class="bi bi-box-arrow-right"></i> Sign out
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

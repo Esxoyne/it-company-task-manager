@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  {{ object|yesno:"Edit Task,Create Task"}}
+{% endblock %}
+
+{% block navigation %}
+    {% include "includes/nav_form.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="col-md-10 col-xl-7 mx-auto">
+    <div class="card">
+      <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
+        <span class="fs-2 fw-light text-center">{{ object|yesno:"Update task,Create a new task" }}</span>
+      </div>
+      <form action="" method="post">
+        <div class="container col-xxl-10">
+          <div class="card-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between">
+            <a
+              href="{% url "task_manager:task-list" %}"
+              class="btn {{ is_dark_mode|yesno:"btn-outline-light,btn-outline-dark" }}"
+            >
+              Cancel
+            </a>
+            <button type="submit" class="btn {{ is_dark_mode|yesno:"btn-light,btn-dark"}}">
+              {% if object %}
+                <i class="bi bi-pencil-square"></i> Update
+              {% else %}
+                <i class="bi bi-plus-square"></i> Create
+              {% endif %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

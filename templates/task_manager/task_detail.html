@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ task.name|truncatechars:32 }}
+{% endblock %}
+
+{% block navigation %}
+  {% include "includes/nav_task_detail.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="128"
+      height="128"
+      fill="currentColor"
+      class="bi bi-check2-square"
+      viewBox="0 0 16 16"
+    >
+      <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+      <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+    </svg>
+    <h2 class="ms-4 me-auto pe-3">{{ task.name }}</h2>
+    {% if task.is_completed %}
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-success-emphasis,text-success" }}">Done</h4>
+    {% elif task.is_overdue %}
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-danger-emphasis,text-danger" }}">Overdue</h4>
+    {% elif task.is_at_risk %}
+      <h4 class="font-monospace {{ is_dark_mode|yesno:"text-warning-emphasis,text-warning" }}">At Risk</h4>
+    {% else %}
+      <h4 class="font-monospace">In progress</h4>
+    {% endif %}
+  </div>
+
+  <div class="container mt-3 mb-4 fs-5">
+    <div class="row">
+      <div class="col-4">
+        <p><i class="bi bi-tag"></i> <span class="d-none d-sm-inline">Type</span></p>
+        <p class="fw-light">{{ task.task_type.name }}</p>
+      </div>
+      <div class="col-4">
+        <p><i class="bi bi-exclamation-diamond"></i> <span class="d-none d-sm-inline">Priority</span></p></p>
+        <p class="fw-light text-{{ task.priority }}-priority">{{ task.priority|capfirst }}</p>
+      </div>
+      <div class="col-4">
+        <p><i class="bi bi-clock me-2"></i> <span class="d-none d-sm-inline">Due</span></p></p>
+        <p class="fw-light">{{ task.deadline|date:"M j, Y" }}</p>
+      </div>
+    </div>
+    <p><i class="bi bi-text-left"></i> Description</p>
+    {% if task.description %}
+      <p class="fw-light">{{ task.description }}</p>
+    {% else %}
+      <p class="text-muted fw-light fst-italic">No description</p>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <section id="assignees" class="container">
+    <div class="row mt-4">
+      <div class="col-sm-12 col-md-6">
+        <div class="d-flex justify-content-between">
+          <h3 class="fw-light mb-3">Assignees</h3>
+          {% if user in task.project.members.all %}
+            <form
+              action="{% url "task_manager:task-toggle-assign" pk=task.id %}"
+              class="ms-auto d-inline"
+              method="post"
+              novalidate
+            >
+              {% csrf_token %}
+              {% if task in user.tasks.all %}
+                <button
+                  type="submit"
+                  class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+                >
+                  <i class="bi bi-person-dash text-danger-emphasis"></i> Unassign me
+                </button>
+              {% else %}
+                <button
+                  type="submit"
+                  class="btn btn-link font-monospace link-body-emphasis text-decoration-none"
+                >
+                  <i class="bi bi-person-add text-success-emphasis"></i> Assign me
+                </button>
+              {% endif %}
+            </form>
+          {% endif %}
+        </div>
+        {% for worker in task.assignees.all %}
+          <div class="card border-secondary mb-3">
+            <div class="card-body">
+              <h5 class="card-title d-flex align-items-center">
+                <i class="bi bi-person fs-3 me-2"></i>
+                <a
+                  href="{% url "task_manager:worker-detail" pk=worker.id %}"
+                  class="text-decoration-none link-body-emphasis stretched-link"
+                >
+                  {{ worker.username }}
+                </a>
+              </h5>
+              <p class="card-text">{{ worker.first_name }} {{ worker.last_name }}</p>
+              <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ worker.position }}</span>
+            </div>
+          </div>
+        {% empty %}
+          <p class="fw-light fs-5">No one is assigned this task</p>
+        {% endfor %}
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <h3 class="fw-light mb-3">Project</h3>
+        <div class="card border-secondary mb-3">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center">
+              <i class="bi bi-kanban fs-3 me-2"></i>
+              <a
+                href="{% url "task_manager:project-detail" pk=task.project.id %}"
+                class="text-decoration-none link-body-emphasis stretched-link"
+              >
+                {{ task.project.name }}
+              </a>
+            </h5>
+            {% if task.project.description %}
+              <p class="card-text">{{ task.project.description }}</p>
+            {% else %}
+              <p class="card-text text-secondary">No description</p>
+            {% endif %}
+            {% with progress=task.project.get_progress %}
+              {% if progress == "100" %}
+                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar bg-success" style="width: 100%">Complete</div>
+                </div>
+              {% elif progress == "0" %}
+              {% else %}
+                <div class="progress project-progress" role="progressbar" aria-label="Project progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: {{ progress }}%"></div>
+                </div>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if user in task.assignees.all %}
+    {% include "includes/task_delete_modal.html" %}
+  {% endif %}
+{% endblock %}

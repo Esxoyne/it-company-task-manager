@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ user.username }}
+{% endblock %}
+
+{% block navigation %}
+  {% include "includes/nav_worker_detail.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="row align-items-center">
+    <div class="col-auto mb-3">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="128"
+        height="128"
+        fill="currentColor"
+        class="bi bi-person-square"
+        viewBox="0 0 16 16"
+      >
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+      </svg>
+    </div>
+    <div class="col-auto me-auto">
+      {% if worker.first_name and worker.last_name %}
+        <h2>{{ worker.first_name }} {{ worker.last_name }}</h2>
+        {% if worker.is_staff %}
+          <h3 class="fw-light">{{ worker.username }} <i class="bi bi-shield-fill-check fs-5"></i></h3>
+        {% else %}
+          <h3 class="fw-light">{{ worker.username}}</h3>
+        {% endif %}
+      {% else %}
+        <h2>{{ worker.username }}</h2>
+      {% endif %}
+    </div>
+    <div class="col-auto my-3">
+      <h5 class="font-monospace">{{ worker.position }}</h5>
+    </div>
+  </div>
+
+  {% if worker.projects.all %}
+    <hr>
+
+    <section id="projects" class="container-fluid row mt-3">
+      <h2 class="fw-light mb-4">Projects</h2>
+
+      {% for project in worker.projects.all %}
+        <div class="col-12 col-lg-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title d-flex align-items-center">
+                <i class="bi bi-kanban fs-3 me-3"></i>
+                <a
+                  href="{% url "task_manager:project-detail" pk=project.id %}"
+                  class="text-decoration-none link-body-emphasis stretched-link"
+                >
+                  {{ project.name }}
+                </a>
+              </h5>
+              {% if project.description %}
+                <p class="card-text">{{ project.description }}</p>
+              {% else %}
+                <p class="card-text text-secondary">No description</p>
+              {% endif %}
+            </div>
+            <div class="card-footer text-body-secondary d-flex justify-content-between">
+              <span><i class="bi bi-person"></i> {{ project.members.count }} member{{ project.members.count|pluralize }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <hr>
+
+    <section id="tasks" class="container-fluid">
+      <h2 class="fw-light mb-4">Assigned tasks</h2>
+
+      {% if worker.tasks.all %}
+        <div class="row mt-4">
+          <div class="col-sm-12 col-md-6">
+            <h3 class="fw-light mb-3">In Progress</h3>
+            {% for task in incomplete_tasks %}
+              <div class="card border-secondary mb-3">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  {% if task.is_overdue %}
+                    <span class="text-danger-emphasis">Overdue</span>
+                  {% elif task.is_at_risk %}
+                    <span class="text-warning-emphasis">At Risk</span>
+                  {% else %}
+                    In Progress
+                  {% endif %}
+                  {% if worker == user %}
+                    {% if task.is_overdue %}
+                      <a
+                        href="{% url "task_manager:task-renew" pk=task.id %}"
+                        class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                      >
+                        Renew
+                      </a>
+                    {% else %}
+                    <form
+                      action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
+                      class="d-inline"
+                      method="post"
+                      novalidate
+                    >
+                      {% csrf_token %}
+                      <button
+                        type="submit"
+                        class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                      >
+                        Complete
+                      </button>
+                      <input type="hidden" name="referer" value="worker-detail">
+                    </form>
+                    {% endif %}
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a
+                      href="{% url "task_manager:task-detail" pk=task.id %}"
+                      class="text-decoration-none link-body-emphasis"
+                    >
+                      {{ task.name }}
+                    </a>
+                  </h5>
+                  <p class="card-text">{{ task.description|truncatechars:64 }}</p>
+                  <div class="d-flex justify-content-between">
+                    <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
+                    <span class="badge rounded-pill {{ task.priority }}-priority">{{ task.priority|capfirst }}</span>
+                  </div>
+                </div>
+                <div class="card-footer text-body-secondary d-flex justify-content-between">
+                  <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
+                  <a
+                    href="{% url "task_manager:project-detail" pk=task.project.id %}"
+                    class="text-reset text-decoration-none"
+                  >
+                    <span><i class="bi bi-kanban"></i> {{ task.project.name|truncatechars:24 }}</span>
+                  </a>
+                </div>
+              </div>
+            {% empty %}
+              <p class="fw-light fs-5">No tasks started</p>
+            {% endfor %}
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <h3 class="fw-light mb-3">Completed</h3>
+            {% for task in completed_tasks %}
+              <div class="card border-secondary mb-3">
+                <div
+                  class="card-header {{ task.is_completed|yesno:"text-bg-success,"}} d-flex justify-content-between align-items-center"
+                >
+                  Done
+                  {% if worker == user %}
+                    <form
+                      action="{% url "task_manager:task-toggle-complete" pk=task.id %}"
+                      class="d-inline"
+                      method="post"
+                      novalidate
+                    >
+                      {% csrf_token %}
+                      <button
+                        type="submit"
+                        class="btn badge text-decoration-none {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}"
+                      >
+                        Undo
+                      </button>
+                      <input type="hidden" name="referer" value="worker-detail">
+                    </form>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a
+                      href="{% url "task_manager:task-detail" pk=task.id %}"
+                      class="text-decoration-none link-body-emphasis"
+                    >
+                      {{ task.name }}
+                    </a>
+                  </h5>
+                  <p class="card-text">{{ task.description|truncatechars:64 }}</p>
+                  <span class="badge rounded-pill {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark"}}">{{ task.task_type.name }}</span>
+                </div>
+                <div class="card-footer text-body-secondary d-flex justify-content-between">
+                  <span><i class="bi bi-clock me-2"></i>{{ task.deadline|date:"M j, Y" }}</span>
+                  <a
+                    href="{% url "task_manager:project-detail" pk=task.project.id %}"
+                    class="text-reset text-decoration-none"
+                  >
+                    <span><i class="bi bi-kanban"></i> {{ task.project.name|truncatechars:24 }}</span>
+                  </a>
+                </div>
+              </div>
+            {% empty %}
+              <p class="fw-light fs-5">No completed tasks</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        {% if user == worker %}
+          <span class="fw-light fs-4">You are not assigned any tasks</span>
+        {% else %}
+          <span class="fw-light fs-4">This user is not assigned any tasks</span>
+        {% endif %}
+      {% endif %}
+    </section>
+
+  {% endif %}
+
+  {% if user.is_staff %}
+    {% include "includes/worker_delete_modal.html" %}
+  {% endif %}
+{% endblock %}

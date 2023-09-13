@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand rounded mt-2">
+  <div class="container-fluid justify-content-start">
+    {% include "includes/go_back_button.html" %}
+    {% if user in project.members.all %}
+      <a
+        class="ms-auto me-3 font-monospace text-decoration-none link-body-emphasis"
+        href="{% url "task_manager:project-update" pk=project.id %}"
+      >
+        Edit project
+      </a>
+      <span
+        type="button"
+        class="font-monospace link-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#projectDelete"
+      >
+        Delete
+      </span>
+    {% endif %}
+    <div class="d-none d-md-flex ms-auto">{% include "includes/nav_links.html" %}</div>
+  </div>
+</nav>

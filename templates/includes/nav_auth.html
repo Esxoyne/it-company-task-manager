@@ -1,0 +1,30 @@
+{% load static %}
+
+<nav class="navbar navbar-expand rounded mt-2">
+  <div class="container-fluid justify-content-start">
+    <a
+      href="{% url "task_manager:home" %}"
+      class="d-flex align-items-center me-auto link-body-emphasis text-decoration-none"
+    >
+      {% if is_dark_mode %}
+        <img
+          src="{% static "img/logo-light.svg" %}"
+          alt="Logo"
+          width="30"
+          height="24"
+          class="pe-none me-2"
+        >
+      {% else %}
+        <img
+          src="{% static "img/logo-dark.svg" %}"
+          alt="Logo"
+          width="30"
+          height="24"
+          class="pe-none me-2"
+        >
+      {% endif %}
+        <span class="fs-4">TaskManager</span>
+    </a>
+    {% include "includes/nav_links.html" %}
+  </div>
+</nav>

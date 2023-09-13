@@ -1,0 +1,39 @@
+{% extends "base_auth.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  Sign Up
+{% endblock %}
+
+{% block navigation %}
+  {% include "includes/nav_auth.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="col-md-8 col-xl-6 mx-auto">
+    <div class="card">
+      <div class="card-header text-center {{ is_dark_mode|yesno:"text-bg-light,text-bg-dark" }}">
+        <span class="fs-2 fw-light text-center">Create an account</span>
+      </div>
+      <div class="container col-12 col-lg-10 col-xxl-9">
+        <div class="card-body">
+          <form method="post" action="{% url "task_manager:sign-up" %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-flex flex-column justify-content-center">
+              <button class="btn btn-lg {{ is_dark_mode|yesno:"btn-light,btn-dark" }}" type="submit">
+                <i class="bi bi-person-fill-add"></i> Sign up
+              </button>
+              <span class="mt-2 text-center">
+                Already have an account?
+                <a href="{% url "login" %}" class="link-body-emphasis link-underline-secondary">
+                  Sign in
+                </a>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

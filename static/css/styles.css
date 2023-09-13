@@ -1,0 +1,130 @@
+.login .asteriskField {
+  display: none;
+}
+
+.asteriskField {
+  margin-left: 3px;
+  color: var(--bs-danger);
+}
+
+.sidebar {
+  min-height: 100vh;
+  max-width: 230px;
+  --bs-bg-opacity: .65;
+}
+
+.main-col {
+  padding-top: 60px;
+}
+@media (min-width: 768px) {
+  .main-col {
+    padding-top: 0px;
+  }
+}
+@media (min-width: 1400px) {
+  .main-col {
+    padding-top: 60px;
+  }
+}
+
+.main-col-transparent {
+  --bs-bg-opacity: .9;
+}
+
+.bg-image-dark {
+  /* Photo by Anni Roenkae: https://www.pexels.com/photo/3d-futuristic-abstract-art-4k-wallpaper-15578416/ */
+  background-image: url("../img/background-dark.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.bg-image-light {
+  /* Photo by Anni Roenkae: https://www.pexels.com/photo/photo-of-abstract-painting-2693212/ */
+  background-image: url("../img/background-light.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.dropdown-item:active {
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
+}
+
+.sign-out:active {
+  color: var(--bs-light);
+  background-color: var(--bs-danger);
+}
+
+.nav-pills .nav-link.active {
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
+  transition: color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.low-priority {
+  background-color: rgb(175, 234, 175);
+  color: black;
+}
+
+.medium-priority {
+  background-color: rgb(89, 121, 219);
+  color: white;
+}
+
+.high-priority {
+  background-color: rgb(255, 209, 122);
+  color: black;
+}
+
+.urgent-priority {
+  background-color: rgb(255, 103, 103);
+  color: white;
+}
+
+.text-low-priority {
+  color: var(--bs-success-text-emphasis);
+}
+
+.text-medium-priority {
+  color: var(--bs-primary-text-emphasis);
+}
+
+.text-high-priority {
+  color: var(--bs-warning-text-emphasis);
+}
+
+.text-urgent-priority {
+  color: var(--bs-danger-text-emphasis);
+}
+
+.project-progress {
+  height: 20px;
+}
+
+.page-item .page-link {
+  color: var(--bs-body-color);
+}
+
+.page-item .page-link:focus {
+  border-color: var(--bs-body-color);
+  box-shadow: none;
+}
+
+.page-item.active .page-link {
+  border-color: var(--bs-body-color);
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
+}
+
+.task-bar-at-risk {
+  background-color: rgb(255, 190, 93);
+  /* background-color: rgb(240, 205, 97); */
+  color: var(--bs-dark);
+}
+
+.task-bar-overdue {
+  background-color: rgb(255, 91, 91);
+  color: var(--bs-light);
+}
