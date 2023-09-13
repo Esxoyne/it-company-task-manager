@@ -82,7 +82,7 @@ class Task(models.Model):
         HIGH = "high", "High"
         URGENT = "urgent", "Urgent"
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=48)
     description = models.TextField(blank=True)
     project = models.ForeignKey(
         Project,
