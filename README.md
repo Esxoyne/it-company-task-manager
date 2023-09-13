@@ -1,6 +1,6 @@
 # Task Manager
 
-Task Manager is a lightweight web-based application designed to assist a small product team in managing their projects.
+Task Manager is a lightweight web-based application designed to assist a small team in managing their projects.
 
 Built using `Django` & `Bootstrap 5`
 
@@ -8,7 +8,7 @@ Built using `Django` & `Bootstrap 5`
 
 1. **Authentication system**: create a new account and login using username and password
 
-2.  You can **update your personal information** in your profile page
+2.  You can **update your personal information** on your profile page
 
 3. **Manage projects and tasks** using web interface
 
@@ -19,7 +19,18 @@ Built using `Django` & `Bootstrap 5`
 
 4. Or use the **admin panel** for advanced management
 
-## Quick Start
+## Getting started
+
+### Check it out
+
+> [Task Manager deployed on Render](https://task-manager-fgk9.onrender.com)
+
+#### You can sign in as the test user (or create a new account):
+
+```
+username: test
+password: 1qazcde3
+```
 
 ### Prerequisites
 
@@ -34,8 +45,8 @@ cd it-company-task-manager
 
 # create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate        # (on Linux/macOS)
-venv\Scripts\Activate           # (on Windows)
+source venv/bin/activate            # on Linux/macOS
+venv\Scripts\Activate               # on Windows
 
 # install dependencies
 pip install -r requirements.txt
