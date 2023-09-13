@@ -136,7 +136,7 @@ LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Europe/Kyiv"
+TIME_ZONE = "Europe/Kiev"
 
 USE_I18N = True
 
