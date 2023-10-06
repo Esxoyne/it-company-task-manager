@@ -38,6 +38,8 @@ password: 1qazcde3
 
 ### Installation
 
+*Rename `.env.sample` file to `.env` and update environment variables accordingly*
+
 ```shell
 # clone the repo
 git clone https://github.com/Esxoyne/it-company-task-manager.git
