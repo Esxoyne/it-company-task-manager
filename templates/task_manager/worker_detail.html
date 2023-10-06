@@ -32,7 +32,11 @@
           <h3 class="fw-light">{{ worker.username}}</h3>
         {% endif %}
       {% else %}
-        <h2>{{ worker.username }}</h2>
+        {% if worker.is_staff %}
+          <h2>{{ worker.username }} <i class="bi bi-shield-fill-check fs-4"></i></h2>
+        {% else %}
+          <h2>{{ worker.username }}</h2>
+        {% endif %}
       {% endif %}
     </div>
     <div class="col-auto my-3">
