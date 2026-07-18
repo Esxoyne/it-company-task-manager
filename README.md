@@ -21,13 +21,6 @@ Built using `Django` & `Bootstrap 5`
 
 ## Getting started
 
-#### You can sign in as the test user (or create a new account):
-
-```
-username: test
-password: 1qazcde3
-```
-
 ### Installation
 
 *Rename `.env.sample` file to `.env` and update environment variables accordingly*
