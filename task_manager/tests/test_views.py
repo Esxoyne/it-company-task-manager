@@ -928,3 +928,13 @@ class PrivateWorkerTest(TestCase):
         self.assertEqual(
             response.context["filter_form"].initial["position"], "2"
         )
+
+    def test_404_page_renders_for_anonymous_user(self):
+        response = self.client.get("/this-does-not-exist/")
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, "404.html")
+
+    def test_404_page_renders_for_authenticated_user(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/this-does-not-exist/")
+        self.assertEqual(response.status_code, 404)

@@ -1,6 +1,7 @@
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
+from django.db import connection
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import generic
@@ -587,3 +588,12 @@ class ProjectToggleJoinView(LoginRequiredMixin, generic.View):
             project.members.add(user)
 
         return redirect(project.get_absolute_url())
+
+
+def health_check(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return HttpResponse("ok", status=200)
+    except Exception:
+        return HttpResponse("unhealthy", status=500)

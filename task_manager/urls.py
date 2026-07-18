@@ -125,6 +125,7 @@ urlpatterns = [
     ),
     path("toggle-theme/", views.ToggleTheme.as_view(), name="toggle-theme"),
     path("sign-up/", views.SignUpView.as_view(), name="sign-up"),
+    path("health/", views.health_check, name="health-check"),
 ]
 
 app_name = "task_manager"
