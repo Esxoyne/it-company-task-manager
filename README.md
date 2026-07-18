@@ -21,20 +21,12 @@ Built using `Django` & `Bootstrap 5`
 
 ## Getting started
 
-### Check it out
-
-> [Task Manager deployed on Render](https://task-manager-fgk9.onrender.com)
-
 #### You can sign in as the test user (or create a new account):
 
 ```
 username: test
 password: 1qazcde3
 ```
-
-### Prerequisites
-
-> Python 3 is required
 
 ### Installation
 
@@ -45,19 +37,11 @@ password: 1qazcde3
 git clone https://github.com/Esxoyne/it-company-task-manager.git
 cd it-company-task-manager
 
-# create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate            # on Linux/macOS
-venv\Scripts\Activate               # on Windows
-
-# install dependencies
-pip install -r requirements.txt
-
-# start the server on localhost
-python manage.py runserver
+# build and run the container
+docker compose up
 ```
 
-The application is running at `http://127.0.0.1:8000/`
+The application is running at `http://127.0.0.1:8000/` by default
 
 ## DB diagram
 ER diagram generated using https://dbdiagram.io/
