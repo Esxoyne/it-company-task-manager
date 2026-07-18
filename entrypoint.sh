@@ -3,7 +3,7 @@ set -e
 
 python manage.py migrate --noinput
 
-if [ "$DEBUG" = "false" ]; then
+if [ "$DJANGO_DEBUG" = "False" ]; then
     python manage.py collectstatic --noinput
 fi
 
