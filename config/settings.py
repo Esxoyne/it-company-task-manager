@@ -33,6 +33,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 # "DJANGO_ALLOWED_HOSTS" should be a single string of hosts with a comma between each.
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
