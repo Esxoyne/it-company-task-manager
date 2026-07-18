@@ -73,13 +73,15 @@
               </a>
             </li>
             <li>
-              <a
-                class="dropdown-item"
-                href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
-              >
-                <i class="bi bi-person-lines-fill pe-none me-2"></i>
-                My Projects
-              </a>
+              {% if user.is_authenticated %}
+                <a
+                  class="dropdown-item"
+                  href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
+                >
+                  <i class="bi bi-person-lines-fill pe-none me-2"></i>
+                  My Projects
+                </a>
+              {% endif %}
             </li>
           </ul>
         </li>
@@ -104,13 +106,15 @@
               </a>
             </li>
             <li>
-              <a
-                class="dropdown-item"
-                href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
-              >
-                <i class="bi bi-person-lines-fill pe-none me-2"></i>
-                My Tasks
-              </a>
+              {% if user.is_authenticated %}
+                <a
+                  class="dropdown-item"
+                  href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
+                >
+                  <i class="bi bi-person-lines-fill pe-none me-2"></i>
+                  My Tasks
+                </a>
+              {% endif %}
             </li>
           </ul>
         </li>
@@ -157,10 +161,12 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" href="{% url "task_manager:worker-detail" pk=user.id %}">
-                  <i class="bi bi-person-fill me-2"></i>
-                  Profile
-                </a>
+                {% if user.is_authenticated %}
+                  <a class="dropdown-item" href="{% url "task_manager:worker-detail" pk=user.id %}">
+                    <i class="bi bi-person-fill me-2"></i>
+                    Profile
+                  </a>
+                {% endif %}
               </li>
               <li><a class="dropdown-item d-md-none" href="{% url "task_manager:toggle-theme" %}">
                 <span class="bi {{ is_dark_mode|yesno:"bi-sun-fill,bi-moon-stars-fill" }} me-2"></span>

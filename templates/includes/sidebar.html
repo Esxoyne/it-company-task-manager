@@ -61,13 +61,15 @@
           <i class="bi bi-kanban-fill pe-none me-2"></i>
           All Projects
         </a></li>
-        <li><a 
-          class="dropdown-item"
-          href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
-        >
-          <i class="bi bi-person-lines-fill pe-none me-2"></i>
-          My Projects
-        </a></li>
+        {% if user.is_authenticated %}
+          <li><a 
+            class="dropdown-item"
+            href="{% url "task_manager:worker-detail" pk=user.id %}#projects"
+          >
+            <i class="bi bi-person-lines-fill pe-none me-2"></i>
+            My Projects
+          </a></li>
+        {% endif %}
       </ul>
     </li>
     <li class="dropdown">
@@ -87,13 +89,15 @@
           <i class="bi bi-list-task pe-none me-2"></i>
           All Tasks
         </a></li>
-        <li><a 
-          class="dropdown-item"
-          href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
-        >
-          <i class="bi bi-person-lines-fill pe-none me-2"></i>
-          My Tasks
-        </a></li>
+        {% if user.is_authenticated %}
+          <li><a 
+            class="dropdown-item"
+            href="{% url "task_manager:worker-detail" pk=user.id %}#tasks"
+          >
+            <i class="bi bi-person-lines-fill pe-none me-2"></i>
+            My Tasks
+          </a></li>
+        {% endif %}
       </ul>
     </li>
     <li>
@@ -139,12 +143,14 @@
             New task...
           </a>
         </li>
-        <li>
-          <a class="dropdown-item" href="{% url "task_manager:worker-detail" pk=user.id %}">
-            <i class="bi bi-person-fill me-2"></i>
-            Profile
-          </a>
-        </li>
+        {% if user.is_authenticated %}
+          <li>
+            <a class="dropdown-item" href="{% url "task_manager:worker-detail" pk=user.id %}">
+              <i class="bi bi-person-fill me-2"></i>
+              Profile
+            </a>
+          </li>
+        {% endif %}
         <li><hr class="dropdown-divider"></li>
         <li>
           <button
