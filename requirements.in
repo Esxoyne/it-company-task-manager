@@ -1,0 +1,9 @@
+asgiref
+crispy-bootstrap5
+dj-database-url
+Django
+django-crispy-forms
+gunicorn
+python-dotenv
+sqlparse
+whitenoise
