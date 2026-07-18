@@ -8,15 +8,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN adduser --disabled-password django-user
+
 COPY . .
 
-RUN adduser \
-    --disabled-password \
-    django-user
-
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh && \
+    mkdir -p /app/staticfiles && \
+    chown -R django-user:django-user /app
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-
-RUN mkdir -p /app/staticfiles && chown -R django-user:django-user /app
 USER django-user
