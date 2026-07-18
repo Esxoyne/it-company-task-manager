@@ -26,6 +26,8 @@ gunicorn==26.0.0
     # via -r requirements.in
 packaging==26.2
     # via gunicorn
+psycopg2-binary==2.9.12
+    # via -r requirements.in
 python-dotenv==1.2.2
     # via -r requirements.in
 sqlparse==0.5.5

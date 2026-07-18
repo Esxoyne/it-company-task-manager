@@ -7,3 +7,4 @@ gunicorn
 python-dotenv
 sqlparse
 whitenoise
+psycopg2-binary
