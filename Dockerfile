@@ -12,11 +12,11 @@ COPY . .
 
 RUN adduser \
     --disabled-password \
-    --no-create-home \
     django-user
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
+RUN mkdir -p /app/staticfiles && chown -R django-user:django-user /app
 USER django-user
