@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:18-trixie
+    restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
@@ -16,13 +17,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - static_data:/app/staticfiles
     env_file:
       - .env
-    command: sh -c "gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    command: sh -c "gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS}"
     healthcheck:
       test:
         - CMD
